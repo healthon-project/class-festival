@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>2026 학생 건강증진 수업 페스티벌 | 전북특별자치도교육청</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              vibe: {
+                dark: '#0f172a',
+                purple: '#8b5cf6',
+                cyan: '#06b6d4',
+                pink: '#ec4899',
+                yellow: '#f59e0b',
+                green: '#10b981',
+              }
+            },
+            fontFamily: {
+              sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Pretendard Font CDN -->
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    
+    <!-- React & ReactDOM UMD CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone CDN -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
+    <style>
+      .glass-card {
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .glass-neon {
+        background: rgba(30, 27, 75, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+      }
+      .text-gradient {
+        background: linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #f43f5e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .gold-gradient {
+        background: linear-gradient(135deg, #f59e0b 0%, #fef08a 50%, #d97706 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      @keyframes floatAnim {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(1deg); }
+      }
+      .animate-float { animation: floatAnim 4s ease-in-out infinite; }
+    </style>
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased font-sans min-h-screen touch-manipulation">
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect, useRef, createContext, useContext } = React;
+
+      // Audio & Vibration Synthesizer
+      const playAudioEffect = (type) => {
+        try {
+          if (typeof window !== 'undefined' && 'vibrate' in navigator) {
+            if (type === 'click') navigator.vibrate(25);
+            else if (type === 'success') navigator.vibrate([40, 60, 40]);
+            else if (type === 'fanfare') navigator.vibrate([100, 50, 100, 50, 200]);
+            else if (type === 'wrong') navigator.vibrate([80, 40, 80]);
+          }
+        } catch (e) {}
+
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          const now = ctx.currentTime;
+
+          if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, now);
+            osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+            osc.start(now);
+            osc.stop(now + 0.05);
+          } else if (type === 'success') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.1);
+            osc.frequency.setValueAtTime(783.99, now + 0.2);
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+            osc.start(now);
+            osc.stop(now + 0.35);
+          } else if (type === 'fanfare') {
+            const notes = [523.25, 659.25, 783.99, 1046.50];
+            notes.forEach((freq, idx) => {
+              const o = ctx.createOscillator();
+              const g = ctx.createGain();
+              o.type = 'sine';
+              o.frequency.setValueAtTime(freq, now + idx * 0.12);
+              g.gain.setValueAtTime(0.3, now + idx * 0.12);
+              g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.3);
+              o.connect(g);
+              g.connect(ctx.destination);
+              o.start(now + idx * 0.12);
+              o.stop(now + idx * 0.12 + 0.3);
+            });
+          } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(220, now);
+            osc.frequency.exponentialRampToValueAtTime(110, now + 0.2);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          }
+        } catch (e) {}
+      };
+
+      // User Context
+      const UserContext = createContext();
+
+      const UserProvider = ({ children }) => {
+        const [profile, setProfile] = useState(() => {
+          const saved = localStorage.getItem('cf_profile');
+          return saved ? JSON.parse(saved) : { affiliation: '', name: '', avatar: '👨‍🏫' };
+        });
+
+        const [bodyMissions, setBodyMissions] = useState(() => {
+          const saved = localStorage.getItem('cf_body');
+          return saved ? JSON.parse(saved) : { walk20s: false, squats30: false, balance10s: false, water1cup: false, highfive: false };
+        });
+
+        const [brainQuiz, setBrainQuiz] = useState(() => {
+          const saved = localStorage.getItem('cf_brain_quiz');
+          return saved ? JSON.parse(saved) : { completed: false, score: 0, level: '🏆 뇌 청춘 S급 (뇌 연령 10대 슈퍼 브레인!)' };
+        });
+
+        const [review, setReview] = useState(() => {
+          const saved = localStorage.getItem('cf_review');
+          return saved ? JSON.parse(saved) : { completed: false, idea: '', boothReview: '', rating: 5 };
+        });
+
+        const [activeTab, setActiveTab] = useState('home');
+        const [isAdminView, setIsAdminView] = useState(false);
+
+        const [allReviews, setAllReviews] = useState(() => {
+          const savedFeed = localStorage.getItem('cf_all_reviews');
+          return savedFeed ? JSON.parse(savedFeed) : [
+            { id: 1, name: '김민수 선생님', affiliation: '전북초등학교', idea: '수학 퀴즈 생성을 AI 프롬프트로 3초 만에 만들기!', review: '10가지 뇌 훈련 퀴즈가 너무 신나고 몰입감 넘쳤습니다! 👍', date: '방금 전', score: 300 },
+            { id: 2, name: '박지현 교사', affiliation: '전북중학교', idea: '학급 규칙 칭찬 카드를 바이브 코딩으로 제작예정', review: '거울글자 맞추기와 스트룹 퀴즈가 뇌를 확 깨워주네요!', date: '3분 전', score: 300 },
+            { id: 3, name: '이동현 선생님', affiliation: '전북고등학교', idea: '정보 수업 프롬프트 엔지니어링 미니 탐험대 운영', review: '교사 페스티벌 부스 중 가장 재미있고 기발합니다!', date: '5분 전', score: 280 },
+          ];
+        });
+
+        const bodyScore = Object.values(bodyMissions).filter(Boolean).length * 20;
+        const brainQuizScore = brainQuiz.completed ? 100 : 0;
+        const reviewScore = review.completed ? 100 : 0;
+        const totalScore = bodyScore + brainQuizScore + reviewScore;
+        const isStickerActive = totalScore >= 300;
+
+        useEffect(() => { localStorage.setItem('cf_profile', JSON.stringify(profile)); }, [profile]);
+        useEffect(() => { localStorage.setItem('cf_body', JSON.stringify(bodyMissions)); }, [bodyMissions]);
+        useEffect(() => { localStorage.setItem('cf_brain_quiz', JSON.stringify(brainQuiz)); }, [brainQuiz]);
+        useEffect(() => { localStorage.setItem('cf_review', JSON.stringify(review)); }, [review]);
+        useEffect(() => { localStorage.setItem('cf_all_reviews', JSON.stringify(allReviews)); }, [allReviews]);
+
+        const updateProfile = (affiliation, name, avatar) => {
+          setProfile({ affiliation, name, avatar });
+        };
+
+        const toggleBodyMission = (key) => {
+          setBodyMissions(prev => {
+            const next = { ...prev, [key]: !prev[key] };
+            if (!prev[key]) playAudioEffect('success');
+            return next;
+          });
+        };
+
+        const completeBrainQuiz = (scorePoints, levelGrade) => {
+          setBrainQuiz({ completed: true, score: scorePoints, level: levelGrade });
+          playAudioEffect('success');
+        };
+
+        const resetBrainQuiz = () => {
+          setBrainQuiz({ completed: false, score: 0, level: '' });
+          playAudioEffect('click');
+        };
+
+        const submitReviewData = (ideaText, boothReviewText, ratingVal) => {
+          setReview({ completed: true, idea: ideaText, boothReview: boothReviewText, rating: ratingVal });
+          setAllReviews(prev => [{
+            id: Date.now(),
+            name: profile.name || '선생님',
+            affiliation: profile.affiliation || '전북교육청 교사',
+            idea: ideaText,
+            review: boothReviewText,
+            date: '방금 전',
+            score: totalScore + 100
+          }, ...prev]);
+          playAudioEffect('fanfare');
+        };
+
+        return (
+          <UserContext.Provider value={{
+            profile, updateProfile, bodyMissions, toggleBodyMission, bodyScore,
+            brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore, review, submitReviewData, reviewScore,
+            totalScore, isStickerActive, activeTab, setActiveTab, isAdminView, setIsAdminView, allReviews
+          }}>
+            {children}
+          </UserContext.Provider>
+        );
+      };
+
+      const useUser = () => useContext(UserContext);
+
+      // Header Component with Official Image Logo in Top-Left
+      function Header() {
+        const { profile, totalScore, isStickerActive, isAdminView, setIsAdminView, setActiveTab } = useUser();
+        return (
+          <header className="sticky top-0 z-40 w-full glass-card border-b border-purple-500/20 px-3 py-2 shadow-lg">
+            <div className="max-w-md mx-auto flex items-center justify-between">
+              <button 
+                onClick={() => { playAudioEffect('click'); setActiveTab('home'); }}
+                className="flex items-center hover:scale-105 transition-transform"
+                title="홈으로 이동"
+              >
+                <img 
+                  src="./logo.jpg" 
+                  alt="전북특별자치도교육청" 
+                  className="h-8 sm:h-9 rounded-lg bg-white px-2 py-1 object-contain shadow-md"
+                />
+              </button>
+
+              <div className="flex items-center space-x-2">
+                {profile.name && (
+                  <div className="flex items-center gap-1 bg-slate-900/90 border border-slate-800 rounded-full px-2 py-0.5">
+                    <span className="text-xs">{profile.avatar || '👨‍🏫'}</span>
+                    <div className={`flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-black ${
+                      isStickerActive ? 'bg-amber-400 text-slate-950' : 'bg-purple-950 text-purple-300'
+                    }`}>
+                      🏆 {totalScore}p
+                    </div>
+                  </div>
+                )}
+
+                <button
+                  onClick={() => { playAudioEffect('click'); setIsAdminView(!isAdminView); }}
+                  className={`px-2.5 py-1 rounded-xl border text-[10px] font-bold ${isAdminView ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-slate-900 text-slate-300 border-slate-700'}`}
+                >
+                  🖥️ 전광판
+                </button>
+              </div>
+            </div>
+          </header>
+        );
+      }
+
+      // Always Visible Pinned Navigation Bar with Quiz Emoji ❓
+      function AlwaysVisibleNavBar() {
+        const { activeTab, setActiveTab, bodyScore, brainQuizScore, reviewScore, totalScore, isStickerActive } = useUser();
+        
+        const tabs = [
+          { id: 'mission', label: '미션', icon: '🏃', badge: `${bodyScore}/100` },
+          { id: 'quiz', label: '퀴즈', icon: '❓', badge: `${brainQuizScore}/100` },
+          { id: 'review', label: '소감작성', icon: '💬', badge: `${reviewScore}/100` },
+          { id: 'sticker', label: '스티커판', icon: '⭐', badge: isStickerActive ? 'ON!' : `${totalScore}p` },
+          { id: 'home', label: '홈', icon: '🏠', badge: null },
+        ];
+
+        return (
+          <div className="sticky top-[52px] z-30 w-full glass-card border-b border-cyan-500/30 px-2 py-2 shadow-2xl bg-slate-950/95 backdrop-blur-xl">
+            <div className="max-w-md mx-auto grid grid-cols-5 gap-1 sm:gap-1.5">
+              {tabs.map((t) => {
+                const isActive = activeTab === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => { playAudioEffect('click'); setActiveTab(t.id); }}
+                    className={`flex flex-col items-center justify-center py-2 px-0.5 rounded-2xl transition-all duration-200 shadow-md ${
+                      isActive 
+                        ? 'bg-gradient-to-b from-cyan-400 to-blue-600 text-slate-950 font-black ring-2 ring-cyan-300 scale-105 shadow-[0_0_20px_rgba(6,182,212,0.7)]' 
+                        : 'bg-slate-900 text-slate-200 border border-slate-800 hover:border-cyan-500/50'
+                    }`}
+                  >
+                    <span className="text-xl leading-none mb-0.5">{t.icon}</span>
+                    <span className={`text-[10px] font-black tracking-tighter truncate w-full text-center ${isActive ? 'text-slate-950' : 'text-white'}`}>
+                      {t.label}
+                    </span>
+                    {t.badge ? (
+                      <span className={`text-[7.5px] font-black px-1 py-0.2 rounded-full mt-0.5 ${isActive ? 'bg-slate-950 text-cyan-300' : 'bg-slate-800 text-cyan-400'}`}>
+                        {t.badge}
+                      </span>
+                    ) : (
+                      <span className="text-[7.5px] opacity-0 mt-0.5">.</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
+      // 1. Home Screen
+      function HomeScreen() {
+        const { profile, updateProfile, setActiveTab } = useUser();
+        const [affiliation, setAffiliation] = useState(profile.affiliation || '');
+        const [name, setName] = useState(profile.name || '');
+        const [avatar, setAvatar] = useState(profile.avatar || '👨‍🏫');
+
+        const handleAffiliationChange = (val) => {
+          setAffiliation(val);
+          updateProfile(val, name, avatar);
+        };
+
+        const handleNameChange = (val) => {
+          setName(val);
+          updateProfile(affiliation, val, avatar);
+        };
+
+        const handleAvatarChange = (av) => {
+          setAvatar(av);
+          updateProfile(affiliation, name, av);
+        };
+
+        const avatarList = [
+          { emoji: '👨‍🏫', label: '남교사' },
+          { emoji: '👩‍🏫', label: '여교사' },
+          { emoji: '🏃‍♂️', label: '남러너' },
+          { emoji: '🏃‍♀️', label: '여러너' },
+          { emoji: '👩‍💻', label: '코더' },
+          { emoji: '🧙‍♂️', label: '마법사' },
+          { emoji: '🦸‍♀️', label: '히어로' },
+          { emoji: '👨‍🚀', label: '우주인' },
+          { emoji: '🦊', label: '스마트여우' },
+          { emoji: '🤖', label: 'AI봇' },
+        ];
+
+        return (
+          <div className="max-w-md mx-auto space-y-5 pb-10 text-center">
+            {/* Main Title */}
+            <div className="space-y-1.5 pt-2">
+              <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
+                2026 학생 건강증진<br />
+                <span className="text-gradient">수업 페스티벌</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-cyan-300 font-extrabold tracking-tight">
+                바이브 코딩과 보건교육이 만나면?
+              </p>
+            </div>
+
+            {/* Center Graphic Artwork */}
+            <div className="relative py-1 my-1 animate-float">
+              <div className="w-56 h-56 sm:w-64 sm:h-64 mx-auto rounded-full bg-gradient-to-tr from-purple-600 via-blue-600 to-cyan-400 p-1 shadow-[0_0_40px_rgba(6,182,212,0.5)] flex items-center justify-center">
+                <div className="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-between relative overflow-hidden py-7 px-4 text-center">
+                  <div className="absolute inset-0 bg-purple-900/20 rounded-full blur-xl"></div>
+                  
+                  {/* 1. TOP TITLE INSIDE CIRCLE */}
+                  <div className="text-[12px] sm:text-xs font-black text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.9)] whitespace-nowrap my-auto">
+                    AI랑 함께 하는 건강 퀴즈 미션 🎯
+                  </div>
+
+                  {/* 2. MIDDLE EMOJIS */}
+                  <div className="text-3xl sm:text-4xl flex items-center justify-center gap-2.5 my-auto">
+                    <span>🏃‍♂️</span>
+                    <span className="text-4xl animate-bounce text-amber-300 drop-shadow-[0_0_12px_rgba(245,158,11,0.8)]">❓</span>
+                    <span>🤖</span>
+                  </div>
+
+                  {/* 3. BOTTOM SINGLE LINE TEXT */}
+                  <div className="text-[11px] sm:text-xs font-black text-amber-300 animate-pulse drop-shadow-[0_0_10px_rgba(245,158,11,1)] tracking-tight whitespace-nowrap my-auto">
+                    🎁 300점 획득시 선물이 팡팡! 🎉
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Direct Start Button */}
+            <button
+              onClick={() => { playAudioEffect('success'); setActiveTab('mission'); }}
+              className="w-full py-4 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-400 text-slate-950 font-black text-base rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.6)] hover:scale-105 transition-transform"
+            >
+              🏃 미션 시작하기 (상단 메뉴 선택 가능) ➔
+            </button>
+
+            {/* Profile Input Section */}
+            <div className="glass-card rounded-3xl p-5 border border-purple-500/30 text-left space-y-4 shadow-2xl">
+              <h3 className="text-sm font-extrabold text-white flex items-center gap-1.5">
+                <span>📝</span> 프로필
+              </h3>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 mb-1">소속 (학교 / 기관명) *</label>
+                  <input
+                    type="text" placeholder="예: 전북초등학교, OO중학교"
+                    value={affiliation} onChange={e => handleAffiliationChange(e.target.value)}
+                    className="w-full bg-slate-900/90 border border-slate-700 focus:border-purple-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 mb-1">선생님 성함 *</label>
+                  <input
+                    type="text" placeholder="예: 김선생님, 홍길동"
+                    value={name} onChange={e => handleNameChange(e.target.value)}
+                    className="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-500 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 mb-1.5">캐릭터 선택 (남/여 & 다양성 10종)</label>
+                  <div className="grid grid-cols-5 gap-2">
+                    {avatarList.map(av => (
+                      <button
+                        type="button" key={av.emoji} onClick={() => { playAudioEffect('click'); handleAvatarChange(av.emoji); }}
+                        className={`p-2 rounded-2xl border flex flex-col items-center justify-center transition-all ${
+                          avatar === av.emoji 
+                            ? 'bg-purple-600/40 border-purple-400 ring-2 ring-purple-400 scale-105 shadow-[0_0_15px_rgba(168,85,247,0.6)]' 
+                            : 'bg-slate-900 border-slate-800 opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <span className="text-2xl">{av.emoji}</span>
+                        <span className="text-[8.5px] font-black text-slate-300 mt-1 truncate max-w-full">{av.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // 2. Physical Mission View
+      function MissionTab() {
+        const { bodyMissions, toggleBodyMission, bodyScore } = useUser();
+        const [walkTimer, setWalkTimer] = useState(20);
+        const [isWalkActive, setIsWalkActive] = useState(false);
+        const [squats, setSquats] = useState(0);
+        const [balTimer, setBalTimer] = useState(10);
+        const [isBalActive, setIsBalActive] = useState(false);
+
+        useEffect(() => {
+          let interval = null;
+          if (isWalkActive && walkTimer > 0) interval = setInterval(() => setWalkTimer(t => t - 1), 1000);
+          else if (walkTimer === 0 && isWalkActive) { setIsWalkActive(false); if (!bodyMissions.walk20s) toggleBodyMission('walk20s'); }
+          return () => clearInterval(interval);
+        }, [isWalkActive, walkTimer]);
+
+        useEffect(() => {
+          let interval = null;
+          if (isBalActive && balTimer > 0) interval = setInterval(() => setBalTimer(t => t - 1), 1000);
+          else if (balTimer === 0 && isBalActive) { setIsBalActive(false); if (!bodyMissions.balance10s) toggleBodyMission('balance10s'); }
+          return () => clearInterval(interval);
+        }, [isBalActive, balTimer]);
+
+        return (
+          <div className="max-w-md mx-auto space-y-4 pb-10 pt-2">
+            <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold uppercase text-purple-400">신체 활동 챌린지</span>
+                <h2 className="text-xl font-black text-white">미션 5종</h2>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-black text-cyan-400">{bodyScore} <span className="text-xs text-slate-400">/ 100p</span></div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.walk20s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-sm text-white">🏃 미션 1: 제자리 걷기 20초</h3>
+                  <span className="text-xs font-bold text-emerald-400">+20점</span>
+                </div>
+                {bodyMissions.walk20s ? <p className="text-xs text-emerald-400 font-bold mt-2">✅ 20초 성공!</p> : (
+                  <button onClick={() => { setWalkTimer(20); setIsWalkActive(true); }} disabled={isWalkActive} className="mt-2 px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">
+                    {isWalkActive ? `걷는 중... (${walkTimer}초)` : '20초 타이머 시작'}
+                  </button>
+                )}
+              </div>
+
+              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.squats30 ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-sm text-white">🏋️ 미션 2: 스쿼트 30개</h3>
+                  <span className="text-xs font-bold text-emerald-400">+20점</span>
+                </div>
+                {bodyMissions.squats30 ? <p className="text-xs text-emerald-400 font-bold mt-2">✅ 스쿼트 30개 완료!</p> : (
+                  <button onClick={() => { const n = squats + 1; setSquats(n); if (n >= 30) toggleBodyMission('squats30'); }} className="mt-2 px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs">
+                    🔥 스쿼트 1개 터치 ({squats}/30)
+                  </button>
+                )}
+              </div>
+
+              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.balance10s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-sm text-white">🧘 미션 3: 한 발로 10초 버티기</h3>
+                  <span className="text-xs font-bold text-emerald-400">+20점</span>
+                </div>
+                {bodyMissions.balance10s ? <p className="text-xs text-emerald-400 font-bold mt-2">✅ 10초 버티기 성공!</p> : (
+                  <button onClick={() => { setBalTimer(10); setIsBalActive(true); }} disabled={isBalActive} className="mt-2 px-3 py-1.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs">
+                    {isBalActive ? `버티는 중... (${balTimer}초)` : '10초 타이머 시작'}
+                  </button>
+                )}
+              </div>
+
+              {/* Mission 4 */}
+              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.water1cup ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+                <div className="flex justify-between items-center gap-2">
+                  <h3 className="font-bold text-sm text-white whitespace-nowrap">🥛 미션 4: 물 한 컵 마시기</h3>
+                  <button 
+                    onClick={() => toggleBodyMission('water1cup')} 
+                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
+                      bodyMissions.water1cup ? 'bg-emerald-600' : 'bg-blue-500 hover:bg-blue-600'
+                    }`}
+                  >
+                    {bodyMissions.water1cup ? '✅ 완료 (20점)' : '완료 (20점)'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Mission 5 */}
+              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.highfive ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+                <div className="flex justify-between items-center gap-2">
+                  <h3 className="font-bold text-sm text-white whitespace-nowrap">✋ 미션 5: 옆 친구와 하이파이브</h3>
+                  <button 
+                    onClick={() => toggleBodyMission('highfive')} 
+                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
+                      bodyMissions.highfive ? 'bg-emerald-600' : 'bg-pink-500 hover:bg-pink-600'
+                    }`}
+                  >
+                    {bodyMissions.highfive ? '✅ 완료 (20점)' : '완료 (20점)'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // 3. 10-Question Quiz View (Added bottom arrow navigation ⬅️ 이전 / 다음 ➡️ to all questions)
+      function QuizTab() {
+        const { brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore } = useUser();
+        const [step, setStep] = useState(0);
+        const [score, setScore] = useState(0);
+
+        const handleAnswer = (isCorrect) => {
+          const nextScore = score + (isCorrect ? 10 : 0);
+          if (isCorrect) playAudioEffect('success');
+          else playAudioEffect('wrong');
+
+          if (step < 9) {
+            setScore(nextScore);
+            setStep(s => s + 1);
+          } else {
+            let levelGrade = '🏆 뇌 청춘 S급 (뇌 연령 10대 슈퍼 브레인!)';
+            if (nextScore < 70) levelGrade = '🧠 뇌 활력 A급 (뇌 연령 20대!)';
+            if (nextScore < 50) levelGrade = '👍 뇌 건강 B급 (뇌 활성 진행 중!)';
+            completeBrainQuiz(nextScore, levelGrade);
+          }
+        };
+
+        const handleRestart = () => {
+          setStep(0);
+          setScore(0);
+          resetBrainQuiz();
+        };
+
+        const optBtnStyle = "w-full py-3.5 px-4 bg-slate-900/90 text-slate-100 font-bold text-xs rounded-xl border border-slate-700 hover:border-purple-500 hover:bg-purple-950/30 transition-all text-center flex items-center justify-center";
+
+        return (
+          <div className="max-w-md mx-auto space-y-4 pb-10 pt-2">
+            {/* Quiz Header Card */}
+            <div className="glass-card rounded-3xl p-4 sm:p-5 border border-purple-500/30 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] sm:text-xs font-bold text-cyan-400 tracking-tight">뇌 자극 민첩도 10단계 챌린지</span>
+                <span className="text-sm font-black text-cyan-300 bg-slate-900/90 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+                  {brainQuizScore} <span className="text-[10px] text-slate-400 font-normal">/ 100p</span>
+                </span>
+              </div>
+              <h2 className="text-xs sm:text-sm font-black text-white whitespace-nowrap overflow-hidden text-ellipsis">
+                당신의 뇌 나이는 지금 몇 살?
+              </h2>
+            </div>
+
+            {!brainQuiz.completed ? (
+              <div className="glass-card rounded-3xl p-6 border border-purple-500/20 text-center space-y-5">
+                <div className="flex justify-between items-center text-xs font-bold text-purple-300 border-b border-purple-500/20 pb-2">
+                  <span>❓ 뇌 활성화 트레이닝</span>
+                  <span>문제 {step + 1} / 10 (현재 점수: {score}점)</span>
+                </div>
+                
+                {/* Q1: 초성 퀴즈 */}
+                {step === 0 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [1단계: 초성 뇌 자극] 아래 초성이 뜻하는 단어는?
+                    </h3>
+                    <div className="text-3xl font-black tracking-widest text-cyan-300 bg-slate-900/90 py-3 rounded-2xl border border-cyan-500/40">
+                      ㅂ ㄱ ㄱ ㅇ
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
+                        보건교육
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
+                        바구니옷
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q2: 스트룹 색깔 인지 */}
+                {step === 1 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [2단계: 스트룹 뇌 훈련] 글자의 <span className="text-pink-400 font-black">글씨 잉크 색깔</span>을 맞히세요!
+                    </h3>
+                    <div className="text-4xl font-black py-4 bg-slate-900/90 rounded-2xl border border-slate-700" style={{ color: '#ef4444' }}>
+                      노랑
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 pt-1">
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
+                        🔴 빨간색
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
+                        🟡 노란색
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q3: 뇌 순발력 최고 숫자 */}
+                {step === 2 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [3단계: 뇌 민첩 순발력] 가장 <span className="text-cyan-300 font-black">큰 숫자</span>를 순간 터치!
+                    </h3>
+                    <div className="grid grid-cols-3 gap-2 py-2">
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>47</button>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>98</button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>63</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q4: 반짝이는 구체 터치 */}
+                {step === 3 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [4단계: 뇌 순발력 센서] 반짝이는 <span className="text-amber-300 font-black">뇌 에너지 구체</span>를 터치!
+                    </h3>
+                    <button onClick={() => handleAnswer(true)} className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-3xl font-black mx-auto flex items-center justify-center hover:scale-110 active:scale-95 transition-transform shadow-lg">
+                      ✨
+                    </button>
+                  </div>
+                )}
+
+                {/* Q5: 브레인 푸드 */}
+                {step === 4 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [5단계: 뇌 혈관 영양] 뇌에 필수인 <span className="text-emerald-300 font-black">오메가3 브레인 푸드</span>는?
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 py-1">
+                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} flex-col py-4`}>
+                        <span className="text-2xl mb-1">🥜 🐟</span>
+                        <span>견과류 & 등푸른 생선</span>
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={`${optBtnStyle} flex-col py-4`}>
+                        <span className="text-2xl mb-1">🍟 🥤</span>
+                        <span>탄산음료 & 패스트푸드</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q6: 화살표 방향 */}
+                {step === 5 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [6단계: 시공간 인지] 화살표가 가리키는 <span className="text-purple-300 font-black">진짜 방향</span>은?
+                    </h3>
+                    <div className="text-5xl py-2">➡️</div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>⬅️ 왼쪽</button>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>➡️ 오른쪽</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q7: 거울 속 단어 */}
+                {step === 6 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [7단계: 뇌 우뇌 자극] 거울에 뒤집혀 비친 글자 <span className="text-pink-400 font-black flex items-center justify-center text-xl mt-1 tracking-widest">[ 딩 코 브 이 바 ]</span>의 진짜 단어는?
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3 pt-2">
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
+                        🤖 바이브 코딩
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
+                        📦 코딩 바바라
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q8: 뇌 패턴 순서 기억 */}
+                {step === 7 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [8단계: 기억력 테스트] 건강 3대 요소의 올바른 순서는?
+                    </h3>
+                    <div className="text-2xl py-2 bg-slate-900 rounded-xl border border-slate-700">
+                      🏃 ➔ ❓ ➔ 🥛
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
+                        운동 ➔ 퀴즈 ➔ 수분섭취
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
+                        잠자기 ➔ 수액 ➔ 춤추기
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q9: 다른 색깔 찾기 */}
+                {step === 8 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [9단계: 시각 민첩 차이점] 홀로 <span className="text-cyan-300 font-black">파란색인 하트</span>를 터치!
+                    </h3>
+                    <div className="flex justify-center gap-3 py-2 text-3xl">
+                      <button onClick={() => handleAnswer(false)}>💖</button>
+                      <button onClick={() => handleAnswer(false)}>💖</button>
+                      <button onClick={() => handleAnswer(true)}>💙</button>
+                      <button onClick={() => handleAnswer(false)}>💖</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Q10: 창의적 뇌자극 바이브 코딩 */}
+                {step === 9 && (
+                  <div className="space-y-4">
+                    <h3 className="font-extrabold text-sm text-white">
+                      [10단계: 뇌 청춘 최종선언] 보건교육과 코딩의 시너지는?
+                    </h3>
+                    <div className="space-y-2">
+                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-left justify-start`}>
+                        🚀 자연어 프롬프트로 기발한 수업 도구 즉시 완성하기
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={`${optBtnStyle} text-left justify-start`}>
+                        😴 어려운 코딩 포기하기
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Bottom Navigation Arrows for All Questions */}
+                <div className="flex items-center justify-between pt-3 border-t border-slate-800/80 mt-4">
+                  <button
+                    type="button"
+                    onClick={() => { playAudioEffect('click'); setStep(s => Math.max(0, s - 1)); }}
+                    disabled={step === 0}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                      step === 0 
+                        ? 'bg-slate-900/40 text-slate-600 border border-slate-800/50 cursor-not-allowed opacity-40' 
+                        : 'bg-slate-900 text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white'
+                    }`}
+                  >
+                    <span>⬅️</span>
+                    <span>이전</span>
+                  </button>
+
+                  <span className="text-xs font-black text-purple-300 bg-slate-900 px-3 py-1 rounded-full border border-purple-500/30">
+                    {step + 1} / 10
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => { playAudioEffect('click'); setStep(s => Math.min(9, s + 1)); }}
+                    disabled={step === 9}
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
+                      step === 9 
+                        ? 'bg-slate-900/40 text-slate-600 border border-slate-800/50 cursor-not-allowed opacity-40' 
+                        : 'bg-purple-950/80 text-purple-200 border border-purple-500/50 hover:bg-purple-900 hover:text-white'
+                    }`}
+                  >
+                    <span>다음</span>
+                    <span>➡️</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="glass-card rounded-3xl p-6 text-center space-y-4 border border-emerald-500/30">
+                <div className="text-4xl animate-bounce">❓</div>
+                <h3 className="text-xl font-black text-white">🎉 퀴즈 10단계 최종 완주! (100점)</h3>
+                <div className="text-lg font-black text-gradient bg-slate-900/90 py-3 rounded-2xl border border-purple-500/40 shadow-lg">
+                  {brainQuiz.level}
+                </div>
+                <p className="text-xs text-cyan-300 font-bold">
+                  10가지 뇌 민첩 트레이닝을 훌륭히 마쳤습니다!
+                </p>
+
+                <button
+                  onClick={handleRestart}
+                  className="w-full py-3.5 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 text-white font-black text-sm rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
+                >
+                  <span>🔄</span>
+                  <span>퀴즈 다시 도전하기 (10문제 재시작)</span>
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      // 4. Review View
+      function ReviewTab() {
+        const { review, submitReviewData, reviewScore } = useUser();
+        const [idea, setIdea] = useState(review.idea || '');
+        const [boothReview, setBoothReview] = useState(review.boothReview || '');
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          if (!idea.trim() || !boothReview.trim()) return alert('모두 적어주세요!');
+          submitReviewData(idea, boothReview, 5);
+        };
+
+        return (
+          <div className="max-w-md mx-auto space-y-4 pb-10 pt-2">
+            <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
+              <div>
+                <span className="text-[10px] font-bold text-pink-400">부스 소감 & 수업 아이디어</span>
+                <h2 className="text-xl font-black text-white">소감 한마디</h2>
+              </div>
+              <div className="text-2xl font-black text-cyan-400">{reviewScore} <span className="text-xs text-slate-400">/ 100p</span></div>
+            </div>
+
+            {!review.completed ? (
+              <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-6 border border-purple-500/20 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">💡 수업 적용 아이디어 *</label>
+                  <textarea
+                    required rows={3} placeholder="예: 역사 퀴즈 봇 프롬프트 만들기 수업"
+                    value={idea} onChange={e => setIdea(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">💬 부스 한줄 소감 *</label>
+                  <input
+                    type="text" required placeholder="예: 최고로 재미있는 페스티벌 부스입니다!"
+                    value={boothReview} onChange={e => setBoothReview(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none"
+                  />
+                </div>
+
+                <button type="submit" className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-400 text-white font-black text-sm">
+                  소감 제출하기 ➔
+                </button>
+              </form>
+            ) : (
+              <div className="glass-card rounded-3xl p-6 text-center space-y-3 border border-emerald-500/30">
+                <h3 className="text-lg font-black text-white">✅ 소감 제출 완료!</h3>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      // 5. Sticker Pass View
+      function StickerTab() {
+        const { totalScore, isStickerActive } = useUser();
+
+        useEffect(() => {
+          if (isStickerActive && typeof confetti !== 'undefined') {
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+          }
+        }, [isStickerActive]);
+
+        return (
+          <div className="max-w-md mx-auto space-y-5 pb-10 pt-2">
+            <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
+              <div>
+                <span className="text-[10px] font-bold text-amber-400">최종 완주 현황</span>
+                <h2 className="text-xl font-black text-white">스티커판</h2>
+              </div>
+              <div className="text-2xl font-black text-amber-400">{totalScore} <span className="text-xs text-slate-400">/ 300p</span></div>
+            </div>
+
+            {/* Simple Sticker Status Card */}
+            <div className={`rounded-3xl p-8 text-center ${isStickerActive ? 'glass-neon border-amber-400' : 'glass-card border-slate-800'}`}>
+              {isStickerActive ? (
+                <div className="py-2 space-y-3">
+                  <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl bg-amber-400 text-slate-950 shadow-[0_0_30px_rgba(245,158,11,0.9)] animate-bounce">
+                    🏆
+                  </div>
+                  <h3 className="text-xl font-black gold-gradient">미션을 모두 완료하셨습니다! 🎉</h3>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl bg-slate-900 border border-slate-800 text-amber-400 animate-pulse">
+                    🔥
+                  </div>
+                  <h3 className="text-base font-black text-white">아자아자 화이팅! 💪</h3>
+                  <p className="text-xs text-slate-400">300점 도달 시 황금 트로피 불이 켜집니다! ({300 - totalScore}점 남음)</p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      // Booth Admin Dashboard
+      function AdminDashboard() {
+        const { allReviews, setIsAdminView } = useUser();
+        return (
+          <div className="min-h-screen bg-slate-950 text-white p-6 max-w-4xl mx-auto space-y-6 pb-20">
+            <div className="flex justify-between items-center glass-neon p-6 rounded-3xl">
+              <div className="flex items-center gap-3">
+                <img src="./logo.jpg" alt="전북특별자치도교육청" className="h-10 rounded-lg bg-white px-2 py-1 object-contain shadow" />
+                <h1 className="text-2xl font-black">2026 학생 건강증진 수업 페스티벌 전광판</h1>
+              </div>
+              <button onClick={() => setIsAdminView(false)} className="px-4 py-2 bg-slate-800 rounded-xl text-xs font-bold">
+                앱 모드 복귀 ➔
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {allReviews.map(r => (
+                <div key={r.id} className="glass-card p-4 rounded-2xl space-y-2 border border-slate-800">
+                  <div className="flex justify-between text-xs font-bold text-cyan-300">
+                    <span>{r.name} ({r.affiliation})</span>
+                    <span className="text-amber-400">{r.score}점 완주</span>
+                  </div>
+                  <p className="text-xs text-slate-200">💡 {r.idea}</p>
+                  <p className="text-xs text-slate-400 italic">"{r.review}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      // App Main Render
+      function App() {
+        const { activeTab, isAdminView } = useUser();
+        if (isAdminView) return <AdminDashboard />;
+        return (
+          <div className="min-h-screen bg-slate-950 text-slate-100 relative">
+            <Header />
+            <AlwaysVisibleNavBar />
+            <main className="px-4 py-3">
+              {activeTab === 'home' && <HomeScreen />}
+              {activeTab === 'mission' && <MissionTab />}
+              {activeTab === 'quiz' && <QuizTab />}
+              {activeTab === 'review' && <ReviewTab />}
+              {activeTab === 'sticker' && <StickerTab />}
+            </main>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        <UserProvider>
+          <App />
+        </UserProvider>
+      );
+    </script>
+  </body>
+</html>
