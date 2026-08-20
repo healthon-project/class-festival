@@ -83,10 +83,10 @@
       const { useState, useEffect, useRef, createContext, useContext } = React;
 
       // Audio & Vibration Synthesizer
-      const playAudioEffect = (type) => {
+      const playAudioEffect = (type, count = 1) => {
         try {
           if (typeof window !== 'undefined' && 'vibrate' in navigator) {
-            if (type === 'click') navigator.vibrate(25);
+            if (type === 'click' || type === 'squat') navigator.vibrate(25);
             else if (type === 'success') navigator.vibrate([40, 60, 40]);
             else if (type === 'fanfare') navigator.vibrate([100, 50, 100, 50, 200]);
             else if (type === 'wrong') navigator.vibrate([80, 40, 80]);
@@ -103,7 +103,16 @@
           gain.connect(ctx.destination);
           const now = ctx.currentTime;
 
-          if (type === 'click') {
+          if (type === 'squat') {
+            const baseFreq = 400 + Math.min(count * 15, 450);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(baseFreq, now);
+            osc.frequency.exponentialRampToValueAtTime(baseFreq + 150, now + 0.08);
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+            osc.start(now);
+            osc.stop(now + 0.08);
+          } else if (type === 'click') {
             osc.type = 'sine';
             osc.frequency.setValueAtTime(400, now);
             osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
@@ -301,7 +310,7 @@
           { id: 'quiz', label: '퀴즈', icon: '❓', badge: `${brainQuizScore}/100` },
           { id: 'review', label: '소감작성', icon: '💬', badge: `${reviewScore}/100` },
           { id: 'sticker', label: '스티커판', icon: '⭐', badge: isStickerActive ? 'ON!' : `${totalScore}p` },
-          { id: 'home', label: '홈', icon: '🏠', badge: null },
+          { id: 'home', label: '', icon: '🏠', badge: null },
         ];
 
         return (
@@ -319,16 +328,18 @@
                         : 'bg-slate-900 text-slate-200 border border-slate-800 hover:border-cyan-500/50'
                     }`}
                   >
-                    <span className="text-xl leading-none mb-0.5">{t.icon}</span>
-                    <span className={`text-[10px] font-black tracking-tighter truncate w-full text-center ${isActive ? 'text-slate-950' : 'text-white'}`}>
-                      {t.label}
-                    </span>
+                    <span className={`leading-none ${t.id === 'home' ? 'text-2xl py-1' : 'text-xl mb-0.5'}`}>{t.icon}</span>
+                    {t.label ? (
+                      <span className={`text-[10px] font-black tracking-tighter truncate w-full text-center ${isActive ? 'text-slate-950' : 'text-white'}`}>
+                        {t.label}
+                      </span>
+                    ) : null}
                     {t.badge ? (
                       <span className={`text-[7.5px] font-black px-1 py-0.2 rounded-full mt-0.5 ${isActive ? 'bg-slate-950 text-cyan-300' : 'bg-slate-800 text-cyan-400'}`}>
                         {t.badge}
                       </span>
                     ) : (
-                      <span className="text-[7.5px] opacity-0 mt-0.5">.</span>
+                      t.id !== 'home' && <span className="text-[7.5px] opacity-0 mt-0.5">.</span>
                     )}
                   </button>
                 );
@@ -412,14 +423,6 @@
               </div>
             </div>
 
-            {/* Direct Start Button */}
-            <button
-              onClick={() => { playAudioEffect('success'); setActiveTab('mission'); }}
-              className="w-full py-4 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-400 text-slate-950 font-black text-base rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.6)] hover:scale-105 transition-transform"
-            >
-              🏃 미션 시작하기 (하단 메뉴 선택 가능) ➔
-            </button>
-
             {/* Profile Input Section */}
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 text-left space-y-4 shadow-2xl">
               <div className="flex items-center justify-between">
@@ -496,7 +499,7 @@
         );
       }
 
-      // 2. Physical Mission View
+      // 2. Physical Mission View (Missions 1, 2, 3 have matching right-aligned '완료 (20점)' buttons)
       function MissionTab() {
         const { bodyMissions, toggleBodyMission, bodyScore } = useUser();
         const [walkTimer, setWalkTimer] = useState(20);
@@ -519,6 +522,15 @@
           return () => clearInterval(interval);
         }, [isBalActive, balTimer]);
 
+        const handleSquatClick = () => {
+          const nextCount = squats + 1;
+          setSquats(nextCount);
+          playAudioEffect('squat', nextCount);
+          if (nextCount >= 30) {
+            toggleBodyMission('squats30');
+          }
+        };
+
         return (
           <div className="max-w-md mx-auto space-y-4 pt-2">
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex items-center justify-between">
@@ -532,39 +544,84 @@
             </div>
 
             <div className="space-y-3">
+              {/* Mission 1 */}
               <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.walk20s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
-                <div className="flex justify-between items-center">
-                  <h3 className="font-bold text-sm text-white">🏃 미션 1: 제자리 걷기 20초</h3>
-                  <span className="text-xs font-bold text-emerald-400">+20점</span>
-                </div>
-                {bodyMissions.walk20s ? <p className="text-xs text-emerald-400 font-bold mt-2">✅ 20초 성공!</p> : (
-                  <button onClick={() => { setWalkTimer(20); setIsWalkActive(true); }} disabled={isWalkActive} className="mt-2 px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs">
-                    {isWalkActive ? `걷는 중... (${walkTimer}초)` : '20초 타이머 시작'}
+                <div className="flex justify-between items-center gap-2">
+                  <h3 className="font-bold text-sm text-white whitespace-nowrap">🏃 미션 1: 제자리 걷기 20초</h3>
+                  <button 
+                    onClick={() => toggleBodyMission('walk20s')} 
+                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
+                      bodyMissions.walk20s ? 'bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'
+                    }`}
+                  >
+                    {bodyMissions.walk20s ? '✅ 완료 (20점)' : '완료 (20점)'}
                   </button>
+                </div>
+                {!bodyMissions.walk20s && (
+                  <div className="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400 font-bold">20초 타이머 실천</span>
+                    <button 
+                      onClick={() => { setWalkTimer(20); setIsWalkActive(true); }} 
+                      disabled={isWalkActive} 
+                      className="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold"
+                    >
+                      {isWalkActive ? `걷는 중... (${walkTimer}초)` : '20초 타이머 시작 ⏱️'}
+                    </button>
+                  </div>
                 )}
               </div>
 
+              {/* Mission 2 */}
               <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.squats30 ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
-                <div className="flex justify-between items-center">
-                  <h3 className="font-bold text-sm text-white">🏋️ 미션 2: 스쿼트 30개</h3>
-                  <span className="text-xs font-bold text-emerald-400">+20점</span>
-                </div>
-                {bodyMissions.squats30 ? <p className="text-xs text-emerald-400 font-bold mt-2">✅ 스쿼트 30개 완료!</p> : (
-                  <button onClick={() => { const n = squats + 1; setSquats(n); if (n >= 30) toggleBodyMission('squats30'); }} className="mt-2 px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs">
-                    🔥 스쿼트 1개 터치 ({squats}/30)
+                <div className="flex justify-between items-center gap-2">
+                  <h3 className="font-bold text-sm text-white whitespace-nowrap">🏋️ 미션 2: 스쿼트 30개</h3>
+                  <button 
+                    onClick={() => toggleBodyMission('squats30')} 
+                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
+                      bodyMissions.squats30 ? 'bg-emerald-600' : 'bg-purple-600 hover:bg-purple-700'
+                    }`}
+                  >
+                    {bodyMissions.squats30 ? '✅ 완료 (20점)' : '완료 (20점)'}
                   </button>
+                </div>
+                {!bodyMissions.squats30 && (
+                  <div className="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400 font-bold">터치로 30개 카운트</span>
+                    <button 
+                      onClick={handleSquatClick} 
+                      className="px-3 py-1.5 rounded-lg bg-purple-600/30 text-purple-200 border border-purple-500/40 active:scale-95 transition-all text-xs font-bold flex items-center gap-1"
+                    >
+                      <span>🔥</span>
+                      <span>1개 터치 ({squats}/30)</span>
+                    </button>
+                  </div>
                 )}
               </div>
 
+              {/* Mission 3 */}
               <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.balance10s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
-                <div className="flex justify-between items-center">
-                  <h3 className="font-bold text-sm text-white">🧘 미션 3: 한 발로 10초 버티기</h3>
-                  <span className="text-xs font-bold text-emerald-400">+20점</span>
-                </div>
-                {bodyMissions.balance10s ? <p className="text-xs text-emerald-400 font-bold mt-2">✅ 10초 버티기 성공!</p> : (
-                  <button onClick={() => { setBalTimer(10); setIsBalActive(true); }} disabled={isBalActive} className="mt-2 px-3 py-1.5 rounded-xl bg-cyan-500 text-slate-950 font-bold text-xs">
-                    {isBalActive ? `버티는 중... (${balTimer}초)` : '10초 타이머 시작'}
+                <div className="flex justify-between items-center gap-2">
+                  <h3 className="font-bold text-sm text-white whitespace-nowrap">🧘 미션 3: 한 발로 10초 버티기</h3>
+                  <button 
+                    onClick={() => toggleBodyMission('balance10s')} 
+                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
+                      bodyMissions.balance10s ? 'bg-emerald-600' : 'bg-cyan-500 hover:bg-cyan-600'
+                    }`}
+                  >
+                    {bodyMissions.balance10s ? '✅ 완료 (20점)' : '완료 (20점)'}
                   </button>
+                </div>
+                {!bodyMissions.balance10s && (
+                  <div className="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400 font-bold">10초 타이머 실천</span>
+                    <button 
+                      onClick={() => { setBalTimer(10); setIsBalActive(true); }} 
+                      disabled={isBalActive} 
+                      className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-bold"
+                    >
+                      {isBalActive ? `버티는 중... (${balTimer}초)` : '10초 타이머 시작 ⏱️'}
+                    </button>
+                  </div>
                 )}
               </div>
 
