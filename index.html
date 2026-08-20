@@ -702,7 +702,7 @@
         );
       }
 
-      // 3. 10-Question Quiz View (All answer hints/highlights completely removed)
+      // 3. 10-Question Quiz View (Quiz Step 7 set to '세상에서 가장 지루한 중학교는? ➔ 로딩중')
       function QuizTab() {
         const { brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore } = useUser();
         const [step, setStep] = useState(0);
@@ -831,12 +831,9 @@
                 {/* Q4: 거울 속 시계 */}
                 {step === 3 && (
                   <div className="space-y-4">
-                    <h3 className="font-extrabold text-sm text-white">
+                    <h3 className="font-extrabold text-sm text-white leading-relaxed">
                       [4단계: 시공간 뇌자극] 거울 속 시계가 <span className="text-amber-300 font-black">3시 15분</span>을 가리킬 때 <span className="text-cyan-300 font-black">실제 시간</span>은?
                     </h3>
-                    <div className="text-2xl sm:text-3xl font-black tracking-widest text-cyan-300 bg-slate-900/90 py-3 rounded-2xl border border-cyan-500/40">
-                      🪞 🕒 3:15
-                    </div>
                     <div className="grid grid-cols-2 gap-3 pt-2">
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ① 9시 15분
@@ -891,7 +888,7 @@
                     </div>
                     <div className="grid grid-cols-2 gap-3 pt-2">
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ① 활력건강
+                        ① 활건강력
                       </button>
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ② 건활강력
@@ -906,18 +903,29 @@
                   </div>
                 )}
 
-                {/* Q7: 거울 속 단어 */}
+                {/* Q7: 넌센스 퀴즈 - 로딩중 (세상에서 가장 지루한 중학교는?) */}
                 {step === 6 && (
                   <div className="space-y-4">
-                    <h3 className="font-extrabold text-sm text-white">
-                      [7단계: 뇌 우뇌 자극] 거울에 뒤집혀 비친 글자 <span className="text-pink-400 font-black flex items-center justify-center text-xl mt-1 tracking-widest">[ 딩 코 브 이 바 ]</span>의 진짜 단어는?
+                    <h3 className="font-extrabold text-sm text-white leading-relaxed">
+                      [7단계: 넌센스 뇌 자극] 세상에서 <span className="text-cyan-300 font-black">가장 지루한 중학교</span>는?
                     </h3>
+                    <div className="text-3xl font-black text-amber-300 bg-slate-900/90 py-3 rounded-2xl border border-amber-500/40 flex justify-center items-center gap-3">
+                      <span>💻</span>
+                      <span>⏳</span>
+                      <span>❓</span>
+                    </div>
                     <div className="grid grid-cols-2 gap-3 pt-2">
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ① 코딩 바바라
+                        ① 다운로드중
                       </button>
                       <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
-                        ② 바이브 코딩
+                        ② 로딩중
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
+                        ③ 업데이트중
+                      </button>
+                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
+                        ④ 재부팅중
                       </button>
                     </div>
                   </div>
