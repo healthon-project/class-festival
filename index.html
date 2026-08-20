@@ -171,7 +171,6 @@
         });
 
         const [activeTab, setActiveTab] = useState('home');
-        const [isAdminView, setIsAdminView] = useState(false);
 
         const [allReviews, setAllReviews] = useState(() => {
           const savedFeed = localStorage.getItem('cf_all_reviews');
@@ -234,7 +233,7 @@
           <UserContext.Provider value={{
             profile, updateProfile, bodyMissions, toggleBodyMission, bodyScore,
             brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore, review, submitReviewData, reviewScore,
-            totalScore, isStickerActive, activeTab, setActiveTab, isAdminView, setIsAdminView, allReviews
+            totalScore, isStickerActive, activeTab, setActiveTab, allReviews
           }}>
             {children}
           </UserContext.Provider>
@@ -243,9 +242,9 @@
 
       const useUser = () => useContext(UserContext);
 
-      // Header Component with Official Image Logo in Top-Left
+      // Header Component with Official Image Logo in Top-Left and Padlet Link Placeholder on Top-Right
       function Header() {
-        const { profile, totalScore, isStickerActive, isAdminView, setIsAdminView, setActiveTab } = useUser();
+        const { profile, totalScore, isStickerActive, setActiveTab } = useUser();
         return (
           <header className="sticky top-0 z-40 w-full glass-card border-b border-purple-500/20 px-3 py-2 shadow-lg">
             <div className="max-w-md mx-auto flex items-center justify-between">
@@ -273,19 +272,27 @@
                   </div>
                 )}
 
-                <button
-                  onClick={() => { playAudioEffect('click'); setIsAdminView(!isAdminView); }}
-                  className={`px-2.5 py-1 rounded-xl border text-[10px] font-bold ${isAdminView ? 'bg-cyan-500 text-slate-950 border-cyan-400' : 'bg-slate-900 text-slate-300 border-slate-700'}`}
+                {/* Padlet Link Placeholder Button */}
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    playAudioEffect('click');
+                    alert('📌 패들렛 바로가기 링크 준비 중입니다!');
+                  }}
+                  className="px-2.5 py-1 rounded-xl border text-[10px] font-bold bg-gradient-to-r from-pink-500 to-rose-600 text-white border-pink-400/50 hover:border-pink-300 transition-all flex items-center gap-1 shadow-md hover:scale-105 active:scale-95"
+                  title="패들렛 바로가기 (나중에 링크 연결)"
                 >
-                  🖥️ 전광판
-                </button>
+                  <span>📌</span>
+                  <span>패들렛</span>
+                </a>
               </div>
             </div>
           </header>
         );
       }
 
-      // Always Visible Pinned Navigation Bar with Quiz Emoji ❓
+      // Fixed Bottom Navigation Bar
       function AlwaysVisibleNavBar() {
         const { activeTab, setActiveTab, bodyScore, brainQuizScore, reviewScore, totalScore, isStickerActive } = useUser();
         
@@ -298,7 +305,7 @@
         ];
 
         return (
-          <div className="sticky top-[52px] z-30 w-full glass-card border-b border-cyan-500/30 px-2 py-2 shadow-2xl bg-slate-950/95 backdrop-blur-xl">
+          <nav className="fixed bottom-0 left-0 right-0 z-50 w-full glass-card border-t border-cyan-500/30 px-2 py-2 shadow-2xl bg-slate-950/95 backdrop-blur-xl">
             <div className="max-w-md mx-auto grid grid-cols-5 gap-1 sm:gap-1.5">
               {tabs.map((t) => {
                 const isActive = activeTab === t.id;
@@ -327,11 +334,11 @@
                 );
               })}
             </div>
-          </div>
+          </nav>
         );
       }
 
-      // 1. Home Screen (Added Login button at the bottom of Profile input card)
+      // 1. Home Screen
       function HomeScreen() {
         const { profile, updateProfile, setActiveTab } = useUser();
         const [affiliation, setAffiliation] = useState(profile.affiliation || '');
@@ -367,7 +374,7 @@
         ];
 
         return (
-          <div className="max-w-md mx-auto space-y-5 pb-10 text-center">
+          <div className="max-w-md mx-auto space-y-5 text-center">
             {/* Main Title */}
             <div className="space-y-1.5 pt-2">
               <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
@@ -410,7 +417,7 @@
               onClick={() => { playAudioEffect('success'); setActiveTab('mission'); }}
               className="w-full py-4 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-400 text-slate-950 font-black text-base rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.6)] hover:scale-105 transition-transform"
             >
-              🏃 미션 시작하기 (상단 메뉴 선택 가능) ➔
+              🏃 미션 시작하기 (하단 메뉴 선택 가능) ➔
             </button>
 
             {/* Profile Input Section */}
@@ -464,7 +471,7 @@
                   </div>
                 </div>
 
-                {/* Login Button at bottom of Profile Section */}
+                {/* Login Button */}
                 <div className="pt-2">
                   <button
                     type="button"
@@ -513,7 +520,7 @@
         }, [isBalActive, balTimer]);
 
         return (
-          <div className="max-w-md mx-auto space-y-4 pb-10 pt-2">
+          <div className="max-w-md mx-auto space-y-4 pt-2">
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase text-purple-400">신체 활동 챌린지</span>
@@ -626,7 +633,7 @@
         const optBtnStyle = "w-full py-3.5 px-4 bg-slate-900/90 text-slate-100 font-bold text-xs rounded-xl border border-slate-700 hover:border-purple-500 hover:bg-purple-950/30 transition-all text-center flex items-center justify-center";
 
         return (
-          <div className="max-w-md mx-auto space-y-4 pb-10 pt-2">
+          <div className="max-w-md mx-auto space-y-4 pt-2">
             {/* Quiz Header Card */}
             <div className="glass-card rounded-3xl p-4 sm:p-5 border border-purple-500/30 space-y-1.5">
               <div className="flex items-center justify-between">
@@ -887,7 +894,7 @@
         };
 
         return (
-          <div className="max-w-md mx-auto space-y-4 pb-10 pt-2">
+          <div className="max-w-md mx-auto space-y-4 pt-2">
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-pink-400">부스 소감 & 수업 아이디어</span>
@@ -940,7 +947,7 @@
         }, [isStickerActive]);
 
         return (
-          <div className="max-w-md mx-auto space-y-5 pb-10 pt-2">
+          <div className="max-w-md mx-auto space-y-5 pt-2">
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-amber-400">최종 완주 현황</span>
@@ -972,45 +979,12 @@
         );
       }
 
-      // Booth Admin Dashboard
-      function AdminDashboard() {
-        const { allReviews, setIsAdminView } = useUser();
-        return (
-          <div className="min-h-screen bg-slate-950 text-white p-6 max-w-4xl mx-auto space-y-6 pb-20">
-            <div className="flex justify-between items-center glass-neon p-6 rounded-3xl">
-              <div className="flex items-center gap-3">
-                <img src="./logo.jpg" alt="전북특별자치도교육청" className="h-10 rounded-lg bg-white px-2 py-1 object-contain shadow" />
-                <h1 className="text-2xl font-black">2026 학생 건강증진 수업 페스티벌 전광판</h1>
-              </div>
-              <button onClick={() => setIsAdminView(false)} className="px-4 py-2 bg-slate-800 rounded-xl text-xs font-bold">
-                앱 모드 복귀 ➔
-              </button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {allReviews.map(r => (
-                <div key={r.id} className="glass-card p-4 rounded-2xl space-y-2 border border-slate-800">
-                  <div className="flex justify-between text-xs font-bold text-cyan-300">
-                    <span>{r.name} ({r.affiliation})</span>
-                    <span className="text-amber-400">{r.score}점 완주</span>
-                  </div>
-                  <p className="text-xs text-slate-200">💡 {r.idea}</p>
-                  <p className="text-xs text-slate-400 italic">"{r.review}"</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      }
-
       // App Main Render
       function App() {
-        const { activeTab, isAdminView } = useUser();
-        if (isAdminView) return <AdminDashboard />;
+        const { activeTab } = useUser();
         return (
-          <div className="min-h-screen bg-slate-950 text-slate-100 relative">
+          <div className="min-h-screen bg-slate-950 text-slate-100 relative pb-24">
             <Header />
-            <AlwaysVisibleNavBar />
             <main className="px-4 py-3">
               {activeTab === 'home' && <HomeScreen />}
               {activeTab === 'mission' && <MissionTab />}
@@ -1018,6 +992,7 @@
               {activeTab === 'review' && <ReviewTab />}
               {activeTab === 'sticker' && <StickerTab />}
             </main>
+            <AlwaysVisibleNavBar />
           </div>
         );
       }
