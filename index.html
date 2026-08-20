@@ -249,6 +249,12 @@
           setProfile({ affiliation, name, avatar });
         };
 
+        const logoutProfile = () => {
+          setProfile({ affiliation: '', name: '', avatar: '👨‍🏫' });
+          localStorage.removeItem('cf_profile');
+          playAudioEffect('click');
+        };
+
         const toggleBodyMission = (key) => {
           setBodyMissions(prev => {
             const next = { ...prev, [key]: !prev[key] };
@@ -288,7 +294,7 @@
 
         return (
           <UserContext.Provider value={{
-            profile, updateProfile, bodyMissions, toggleBodyMission, bodyScore,
+            profile, updateProfile, logoutProfile, bodyMissions, toggleBodyMission, bodyScore,
             brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore, review, submitReviewData, resetReview, reviewScore,
             totalScore, isStickerActive, activeTab, setActiveTab, allReviews
           }}>
@@ -358,7 +364,7 @@
           { id: 'quiz', label: '퀴즈', icon: '❓', badge: `${brainQuizScore}/100` },
           { id: 'review', label: '소감작성', icon: '📝', badge: `${reviewScore}/100` },
           { id: 'sticker', label: '스티커판', icon: '⭐', badge: isStickerActive ? 'ON!' : `${totalScore}p` },
-          { id: 'home', labelメニュー: '', icon: '🏠', badge: null },
+          { id: 'home', label: '', icon: '🏠', badge: null },
         ];
 
         return (
@@ -399,10 +405,16 @@
 
       // 1. Home Screen
       function HomeScreen() {
-        const { profile, updateProfile, setActiveTab } = useUser();
+        const { profile, updateProfile, logoutProfile, setActiveTab } = useUser();
         const [affiliation, setAffiliation] = useState(profile.affiliation || '');
         const [name, setName] = useState(profile.name || '');
         const [avatar, setAvatar] = useState(profile.avatar || '👨‍🏫');
+
+        useEffect(() => {
+          setAffiliation(profile.affiliation || '');
+          setName(profile.name || '');
+          setAvatar(profile.avatar || '👨‍🏫');
+        }, [profile]);
 
         const handleAffiliationChange = (val) => {
           setAffiliation(val);
@@ -440,7 +452,7 @@
                 2026 학생 건강증진<br />
                 <span className="text-gradient">수업 페스티벌</span>
               </h1>
-              <p className="text-xs sm:text-sm text-cyan-300 font-extrabold tracking-tight pt-2">
+              <p className="text-sm sm:text-base font-black text-cyan-300 tracking-tight pt-2 drop-shadow-[0_0_10px_rgba(6,182,212,0.8)]">
                 바이브 코딩과 보건교육이 만난다면?
               </p>
             </div>
@@ -524,8 +536,8 @@
                   </div>
                 </div>
 
-                {/* Login Button */}
-                <div className="pt-2">
+                {/* Login & Logout Buttons */}
+                <div className="pt-2 space-y-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -541,6 +553,16 @@
                   >
                     <span>🔑</span>
                     <span>로그인하고 미션 이동 ➔</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logoutProfile();
+                    }}
+                    className="w-full py-2 bg-slate-900/90 text-slate-400 hover:text-rose-400 font-bold text-xs rounded-xl border border-slate-800 hover:border-rose-500/40 transition-all flex items-center justify-center shadow-md active:scale-95"
+                  >
+                    로그아웃
                   </button>
                 </div>
               </div>
@@ -709,7 +731,7 @@
         );
       }
 
-      // 3. 10-Question Quiz View
+      // 3. 10-Question Quiz View (Q7 options updated: ① 부재중, ② 로딩중 (✅), ③ 공사중, ④ 통화중)
       function QuizTab() {
         const { brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore } = useUser();
         const [step, setStep] = useState(0);
@@ -910,7 +932,7 @@
                   </div>
                 )}
 
-                {/* Q7: 넌센스 퀴즈 - 로딩중 */}
+                {/* Q7: 넌센스 퀴즈 - 로딩중 (오답 3종 수정: 부재중, 공사중, 통화중) */}
                 {step === 6 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white leading-relaxed">
@@ -923,16 +945,16 @@
                     </div>
                     <div className="grid grid-cols-2 gap-3 pt-2">
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ① 다운로드중
+                        ① 부재중
                       </button>
                       <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ② 로딩중
                       </button>
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ③ 업데이트중
+                        ③ 공사중
                       </button>
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ④ 재부팅중
+                        ④ 통화중
                       </button>
                     </div>
                   </div>
@@ -1070,7 +1092,7 @@
         );
       }
 
-      // 4. Review View (Replaced 💬 speech bubble with 📝 note pad & pen emoji)
+      // 4. Review View
       function ReviewTab() {
         const { review, submitReviewData, resetReview, reviewScore } = useUser();
         const [idea, setIdea] = useState(review.idea || '');
