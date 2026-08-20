@@ -193,7 +193,19 @@
 
         const [bodyMissions, setBodyMissions] = useState(() => {
           const saved = localStorage.getItem('cf_body');
-          return saved ? JSON.parse(saved) : { walk20s: false, squats10: false, balance10s: false, water1cup: false, highfive: false };
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved);
+              return {
+                walk10s: !!parsed.walk10s || !!parsed.walk20s,
+                squats10: !!parsed.squats10 || !!parsed.squats30,
+                balance10s: !!parsed.balance10s,
+                water1cup: !!parsed.water1cup,
+                highfive: !!parsed.highfive
+              };
+            } catch(e) {}
+          }
+          return { walk10s: false, squats10: false, balance10s: false, water1cup: false, highfive: false };
         });
 
         const [brainQuiz, setBrainQuiz] = useState(() => {
@@ -217,7 +229,11 @@
           ];
         });
 
-        const bodyScore = Object.values(bodyMissions).filter(Boolean).length * 20;
+        // Strictly calculate bodyScore for ONLY the 5 active mission keys, capped at 100
+        const ACTIVE_KEYS = ['walk10s', 'squats10', 'balance10s', 'water1cup', 'highfive'];
+        const completedCount = ACTIVE_KEYS.filter(k => !!bodyMissions[k]).length;
+        const bodyScore = Math.min(100, completedCount * 20);
+
         const brainQuizScore = brainQuiz.completed ? 100 : 0;
         const reviewScore = review.completed ? 100 : 0;
         const totalScore = bodyScore + brainQuizScore + reviewScore;
@@ -529,7 +545,7 @@
       // 2. Physical Mission View
       function MissionTab() {
         const { bodyMissions, toggleBodyMission, bodyScore } = useUser();
-        const [walkTimer, setWalkTimer] = useState(20);
+        const [walkTimer, setWalkTimer] = useState(10);
         const [isWalkActive, setIsWalkActive] = useState(false);
         const [squats, setSquats] = useState(0);
         const [balTimer, setBalTimer] = useState(10);
@@ -538,7 +554,7 @@
         useEffect(() => {
           let interval = null;
           if (isWalkActive && walkTimer > 0) interval = setInterval(() => setWalkTimer(t => t - 1), 1000);
-          else if (walkTimer === 0 && isWalkActive) { setIsWalkActive(false); if (!bodyMissions.walk20s) toggleBodyMission('walk20s'); }
+          else if (walkTimer === 0 && isWalkActive) { setIsWalkActive(false); if (!bodyMissions.walk10s) toggleBodyMission('walk10s'); }
           return () => clearInterval(interval);
         }, [isWalkActive, walkTimer]);
 
@@ -572,27 +588,27 @@
 
             <div className="space-y-3">
               {/* Mission 1 */}
-              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.walk20s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.walk10s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
                 <div className="flex justify-between items-center gap-2">
-                  <h3 className="font-bold text-sm text-white whitespace-nowrap">🏃 미션 1: 제자리 걷기 20초</h3>
+                  <h3 className="font-bold text-sm text-white whitespace-nowrap">🏃 미션 1: 제자리 걷기 10초</h3>
                   <button 
-                    onClick={() => toggleBodyMission('walk20s')} 
+                    onClick={() => toggleBodyMission('walk10s')} 
                     className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
-                      bodyMissions.walk20s ? 'bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'
+                      bodyMissions.walk10s ? 'bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'
                     }`}
                   >
-                    {bodyMissions.walk20s ? '✅ 완료 (20점)' : '완료 (20점)'}
+                    {bodyMissions.walk10s ? '✅ 완료 (20점)' : '완료 (20점)'}
                   </button>
                 </div>
-                {!bodyMissions.walk20s && (
+                {!bodyMissions.walk10s && (
                   <div className="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-400 font-bold">20초 타이머 실천</span>
+                    <span className="text-[11px] text-slate-400 font-bold">10초 타이머 실천</span>
                     <button 
-                      onClick={() => { setWalkTimer(20); setIsWalkActive(true); }} 
+                      onClick={() => { setWalkTimer(10); setIsWalkActive(true); }} 
                       disabled={isWalkActive} 
                       className="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold"
                     >
-                      {isWalkActive ? `걷는 중... (${walkTimer}초)` : '20초 타이머 시작 ⏱️'}
+                      {isWalkActive ? `걷는 중... (${walkTimer}초)` : '10초 타이머 시작 ⏱️'}
                     </button>
                   </div>
                 )}
@@ -686,7 +702,7 @@
         );
       }
 
-      // 3. 10-Question Quiz View (Replaced #4, #5, #7, #8 with Recommended Brain-Training Quizzes 1-4, and distributed correct answers evenly across 2, 3, 4)
+      // 3. 10-Question Quiz View (All answer hints/highlights completely removed)
       function QuizTab() {
         const { brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore } = useUser();
         const [step, setStep] = useState(0);
@@ -718,16 +734,18 @@
 
         return (
           <div className="max-w-md mx-auto space-y-4 pt-2">
-            {/* Quiz Header Card */}
-            <div className="glass-card rounded-3xl p-4 sm:p-5 border border-purple-500/30 space-y-1.5">
+            {/* Prominent Enlarged Quiz Header Card */}
+            <div className="glass-card rounded-3xl p-4 sm:p-5 border border-purple-500/40 text-center space-y-2 shadow-2xl">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] sm:text-xs font-bold text-cyan-400 tracking-tight">뇌 자극 민첩도 10단계 챌린지</span>
-                <span className="text-sm font-black text-cyan-300 bg-slate-900/90 px-2.5 py-0.5 rounded-full border border-cyan-500/30">
+                <span className="text-[11px] sm:text-xs font-extrabold text-cyan-400 tracking-tight flex items-center gap-1">
+                  <span>⚡</span> 뇌 자극 10단계 챌린지
+                </span>
+                <span className="text-sm font-black text-cyan-300 bg-slate-900/90 px-3 py-1 rounded-full border border-cyan-500/40 shadow-inner">
                   {brainQuizScore} <span className="text-[10px] text-slate-400 font-normal">/ 100p</span>
                 </span>
               </div>
-              <h2 className="text-xs sm:text-sm font-black text-white whitespace-nowrap overflow-hidden text-ellipsis">
-                당신의 뇌 나이는 지금 몇 살?
+              <h2 className="text-lg sm:text-xl font-black text-amber-300 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-[0_0_12px_rgba(245,158,11,0.6)] pt-1">
+                🧠 당신의 뇌 나이는 지금 몇 살? ❓
               </h2>
             </div>
 
@@ -738,7 +756,7 @@
                   <span>문제 {step + 1} / 10 (현재 점수: {score}점)</span>
                 </div>
                 
-                {/* Q1: 초성 퀴즈 (정답: 3번) */}
+                {/* Q1: 초성 퀴즈 */}
                 {step === 0 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -754,14 +772,14 @@
                       <button onClick={() => handleAnswer(false)} className={`${optBtnStyle} text-left justify-start px-4`}>
                         ② 보라가방
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-left justify-start px-4 text-cyan-300 border-cyan-500/50`}>
+                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-left justify-start px-4`}>
                         ③ 보건교육
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Q2: 고난도 뇌회전 연산 (정답: 2번) */}
+                {/* Q2: 고난도 뇌회전 연산 */}
                 {step === 1 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -774,7 +792,7 @@
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ① 3
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-cyan-300 border-cyan-500/50 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ② 5
                       </button>
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
@@ -787,7 +805,7 @@
                   </div>
                 )}
 
-                {/* Q3: Recommended 1 - 스트룹 일치 찾기 (정답: 3번) */}
+                {/* Q3: 스트룹 일치 찾기 */}
                 {step === 2 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -800,7 +818,7 @@
                       <button onClick={() => handleAnswer(false)} className={`${optBtnStyle} text-purple-400 font-black text-base`}>
                         ② 노랑
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-emerald-400 font-black text-base border-emerald-500/50 bg-emerald-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-emerald-400 font-black text-base`}>
                         ③ 초록
                       </button>
                       <button onClick={() => handleAnswer(false)} className={`${optBtnStyle} text-blue-400 font-black text-base`}>
@@ -810,7 +828,7 @@
                   </div>
                 )}
 
-                {/* Q4: Recommended 2 - 거울 속 시계 (정답: 4번) */}
+                {/* Q4: 거울 속 시계 */}
                 {step === 3 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -829,14 +847,14 @@
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ③ 6시 30분
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-amber-300 border-amber-500/50 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ④ 8시 45분
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Q5: Recommended 3 - 과일 무게 논리 (정답: 2번) */}
+                {/* Q5: 과일 무게 논리 */}
                 {step === 4 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -849,7 +867,7 @@
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ① 4개
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-cyan-300 border-cyan-500/50 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ② 6개
                       </button>
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
@@ -862,7 +880,7 @@
                   </div>
                 )}
 
-                {/* Q6: Recommended 4 - 아나그램 단어 조합 (정답: 3번) */}
+                {/* Q6: 아나그램 단어 조합 */}
                 {step === 5 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -878,7 +896,7 @@
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ② 건활강력
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-cyan-300 border-cyan-500/50 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ③ 건강활력
                       </button>
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
@@ -888,7 +906,7 @@
                   </div>
                 )}
 
-                {/* Q7: 거울 속 단어 (정답: 2번) */}
+                {/* Q7: 거울 속 단어 */}
                 {step === 6 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -898,43 +916,44 @@
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ① 코딩 바바라
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-cyan-300 border-cyan-500/50 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ② 바이브 코딩
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Q8: 다른 하나 찾기 (정답: 3번) */}
+                {/* Q8: 건강 O/X 상식 퀴즈 */}
                 {step === 7 && (
                   <div className="space-y-4">
-                    <h3 className="font-extrabold text-sm text-white">
-                      [8단계: 시각 민첩 차이점] 홀로 <span className="text-cyan-300 font-black">파란색인 💙 하트</span>는 몇 번째에 있을까요?
+                    <h3 className="font-extrabold text-sm text-white leading-relaxed">
+                      [8단계: 건강 O/X 알쏭달쏭] 수박을 먹다가 실수로 삼킨 수박 씨는 <span className="text-amber-300 font-black">맹장(충수)에 들어가 맹장염</span>을 일으킨다?
                     </h3>
-                    <div className="flex justify-center gap-3 py-2 text-3xl">
-                      <span>💖</span>
-                      <span>💖</span>
-                      <span className="animate-pulse">💙</span>
-                      <span>💖</span>
+                    <div className="text-3xl font-black text-cyan-300 bg-slate-900/90 py-3 rounded-2xl border border-cyan-500/40 flex justify-center gap-6">
+                      <span>🍉</span>
+                      <span>🌱</span>
+                      <span>❓</span>
                     </div>
-                    <div className="grid grid-cols-2 gap-3 pt-2">
-                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ① 1번째
+                    <div className="grid grid-cols-2 gap-4 pt-2">
+                      <button 
+                        onClick={() => handleAnswer(false)} 
+                        className="py-4 bg-slate-900/90 border border-slate-700 hover:border-purple-500 hover:bg-purple-950/30 rounded-2xl font-black text-2xl text-slate-100 transition-all flex flex-col items-center justify-center gap-1 shadow-lg"
+                      >
+                        <span className="text-3xl">⭕</span>
+                        <span className="text-xs text-slate-300 font-bold">O (맞다)</span>
                       </button>
-                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ② 2번째
-                      </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-cyan-300 border-cyan-500/50 bg-purple-950/40`}>
-                        ③ 3번째
-                      </button>
-                      <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
-                        ④ 4번째
+                      <button 
+                        onClick={() => handleAnswer(true)} 
+                        className="py-4 bg-slate-900/90 border border-slate-700 hover:border-purple-500 hover:bg-purple-950/30 rounded-2xl font-black text-2xl text-slate-100 transition-all flex flex-col items-center justify-center gap-1 shadow-lg"
+                      >
+                        <span className="text-3xl">❌</span>
+                        <span className="text-xs text-slate-300 font-bold">X (아니다)</span>
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Q9: 수열 규칙 추론 (정답: 4번) */}
+                {/* Q9: 수열 규칙 추론 */}
                 {step === 8 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -953,14 +972,14 @@
                       <button onClick={() => handleAnswer(false)} className={optBtnStyle}>
                         ③ 9
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-base font-black text-amber-300 border-amber-500/50 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={optBtnStyle}>
                         ④ 11
                       </button>
                     </div>
                   </div>
                 )}
 
-                {/* Q10: 뇌 청춘 최종선언 (정답: 2번) */}
+                {/* Q10: 뇌 청춘 최종선언 */}
                 {step === 9 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white">
@@ -970,7 +989,7 @@
                       <button onClick={() => handleAnswer(false)} className={`${optBtnStyle} text-left justify-start`}>
                         ① 어려운 코딩 포기하기
                       </button>
-                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-left justify-start border-cyan-500/50 text-cyan-300 bg-purple-950/40`}>
+                      <button onClick={() => handleAnswer(true)} className={`${optBtnStyle} text-left justify-start`}>
                         ② 🚀 자연어 프롬프트로 기발한 수업 도구 즉시 완성하기
                       </button>
                     </div>
