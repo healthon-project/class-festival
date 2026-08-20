@@ -571,7 +571,7 @@
         );
       }
 
-      // 2. Physical Mission View
+      // 2. Physical Mission View (Standardized completed vs uncompleted color scheme)
       function MissionTab() {
         const { bodyMissions, toggleBodyMission, bodyScore } = useUser();
         const [walkTimer, setWalkTimer] = useState(10);
@@ -617,16 +617,22 @@
 
             <div className="space-y-3">
               {/* Mission 1 */}
-              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.walk10s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+              <div className={`glass-card rounded-2xl p-4 border transition-all ${
+                bodyMissions.walk10s 
+                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                  : 'border-slate-800 bg-slate-900/60'
+              }`}>
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="font-bold text-sm text-white whitespace-nowrap">🏃 미션 1: 제자리 걷기 10초</h3>
                   <button 
                     onClick={() => toggleBodyMission('walk10s')} 
-                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
-                      bodyMissions.walk10s ? 'bg-emerald-600' : 'bg-amber-500 hover:bg-amber-600'
+                    className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
+                      bodyMissions.walk10s 
+                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
                     }`}
                   >
-                    {bodyMissions.walk10s ? '✅ 완료 (20점)' : '완료 (20점)'}
+                    {bodyMissions.walk10s ? '✅ 완료 (20점)' : '미완료 (20점)'}
                   </button>
                 </div>
                 {!bodyMissions.walk10s && (
@@ -635,7 +641,7 @@
                     <button 
                       onClick={() => { setWalkTimer(10); setIsWalkActive(true); }} 
                       disabled={isWalkActive} 
-                      className="px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-bold"
+                      className="px-3 py-1.5 rounded-xl bg-purple-950/80 text-purple-200 border border-purple-500/40 hover:bg-purple-900 hover:text-white text-xs font-bold transition-all"
                     >
                       {isWalkActive ? `걷는 중... (${walkTimer}초)` : '10초 타이머 시작 ⏱️'}
                     </button>
@@ -644,16 +650,22 @@
               </div>
 
               {/* Mission 2 */}
-              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.squats10 ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+              <div className={`glass-card rounded-2xl p-4 border transition-all ${
+                bodyMissions.squats10 
+                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                  : 'border-slate-800 bg-slate-900/60'
+              }`}>
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="font-bold text-sm text-white whitespace-nowrap">🏋️ 미션 2: 스쿼트 10개</h3>
                   <button 
                     onClick={() => toggleBodyMission('squats10')} 
-                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
-                      bodyMissions.squats10 ? 'bg-emerald-600' : 'bg-purple-600 hover:bg-purple-700'
+                    className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
+                      bodyMissions.squats10 
+                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
                     }`}
                   >
-                    {bodyMissions.squats10 ? '✅ 완료 (20점)' : '완료 (20점)'}
+                    {bodyMissions.squats10 ? '✅ 완료 (20점)' : '미완료 (20점)'}
                   </button>
                 </div>
                 {!bodyMissions.squats10 && (
@@ -661,7 +673,7 @@
                     <span className="text-[11px] text-slate-400 font-bold">터치로 10개 카운트</span>
                     <button 
                       onClick={handleSquatClick} 
-                      className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-black text-xs shadow-lg active:scale-90 transition-all flex items-center gap-1.5"
+                      className="px-3.5 py-1.5 rounded-xl bg-purple-950/80 text-purple-200 border border-purple-500/40 hover:bg-purple-900 hover:text-white font-black text-xs shadow-md active:scale-90 transition-all flex items-center gap-1.5"
                     >
                       <span>🔥</span>
                       <span>1개 터치 ({squats}/10)</span>
@@ -671,16 +683,22 @@
               </div>
 
               {/* Mission 3 */}
-              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.balance10s ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+              <div className={`glass-card rounded-2xl p-4 border transition-all ${
+                bodyMissions.balance10s 
+                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                  : 'border-slate-800 bg-slate-900/60'
+              }`}>
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="font-bold text-sm text-white whitespace-nowrap">🧘 미션 3: 한 발로 10초 버티기</h3>
                   <button 
                     onClick={() => toggleBodyMission('balance10s')} 
-                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
-                      bodyMissions.balance10s ? 'bg-emerald-600' : 'bg-cyan-500 hover:bg-cyan-600'
+                    className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
+                      bodyMissions.balance10s 
+                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
                     }`}
                   >
-                    {bodyMissions.balance10s ? '✅ 완료 (20점)' : '완료 (20점)'}
+                    {bodyMissions.balance10s ? '✅ 완료 (20점)' : '미완료 (20점)'}
                   </button>
                 </div>
                 {!bodyMissions.balance10s && (
@@ -689,7 +707,7 @@
                     <button 
                       onClick={() => { setBalTimer(10); setIsBalActive(true); }} 
                       disabled={isBalActive} 
-                      className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-bold"
+                      className="px-3 py-1.5 rounded-xl bg-purple-950/80 text-purple-200 border border-purple-500/40 hover:bg-purple-900 hover:text-white text-xs font-bold transition-all"
                     >
                       {isBalActive ? `버티는 중... (${balTimer}초)` : '10초 타이머 시작 ⏱️'}
                     </button>
@@ -698,31 +716,43 @@
               </div>
 
               {/* Mission 4 */}
-              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.water1cup ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+              <div className={`glass-card rounded-2xl p-4 border transition-all ${
+                bodyMissions.water1cup 
+                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                  : 'border-slate-800 bg-slate-900/60'
+              }`}>
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="font-bold text-sm text-white whitespace-nowrap">🥛 미션 4: 물 한 컵 마시기</h3>
                   <button 
                     onClick={() => toggleBodyMission('water1cup')} 
-                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
-                      bodyMissions.water1cup ? 'bg-emerald-600' : 'bg-blue-500 hover:bg-blue-600'
+                    className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
+                      bodyMissions.water1cup 
+                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
                     }`}
                   >
-                    {bodyMissions.water1cup ? '✅ 완료 (20점)' : '완료 (20점)'}
+                    {bodyMissions.water1cup ? '✅ 완료 (20점)' : '미완료 (20점)'}
                   </button>
                 </div>
               </div>
 
               {/* Mission 5 */}
-              <div className={`glass-card rounded-2xl p-4 border ${bodyMissions.highfive ? 'border-emerald-500/40 bg-emerald-950/20' : 'border-slate-800'}`}>
+              <div className={`glass-card rounded-2xl p-4 border transition-all ${
+                bodyMissions.highfive 
+                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
+                  : 'border-slate-800 bg-slate-900/60'
+              }`}>
                 <div className="flex justify-between items-center gap-2">
                   <h3 className="font-bold text-sm text-white whitespace-nowrap">✋ 미션 5: 옆 친구와 하이파이브</h3>
                   <button 
                     onClick={() => toggleBodyMission('highfive')} 
-                    className={`px-3 py-1.5 rounded-xl text-white font-bold text-xs whitespace-nowrap transition-all ${
-                      bodyMissions.highfive ? 'bg-emerald-600' : 'bg-pink-500 hover:bg-pink-600'
+                    className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
+                      bodyMissions.highfive 
+                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
                     }`}
                   >
-                    {bodyMissions.highfive ? '✅ 완료 (20점)' : '완료 (20점)'}
+                    {bodyMissions.highfive ? '✅ 완료 (20점)' : '미완료 (20점)'}
                   </button>
                 </div>
               </div>
@@ -731,7 +761,7 @@
         );
       }
 
-      // 3. 10-Question Quiz View (Q7 options updated: ① 부재중, ② 로딩중 (✅), ③ 공사중, ④ 통화중)
+      // 3. 10-Question Quiz View
       function QuizTab() {
         const { brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore } = useUser();
         const [step, setStep] = useState(0);
@@ -932,7 +962,7 @@
                   </div>
                 )}
 
-                {/* Q7: 넌센스 퀴즈 - 로딩중 (오답 3종 수정: 부재중, 공사중, 통화중) */}
+                {/* Q7: 넌센스 퀴즈 - 로딩중 */}
                 {step === 6 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white leading-relaxed">
