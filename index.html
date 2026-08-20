@@ -281,10 +281,15 @@
           playAudioEffect('fanfare');
         };
 
+        const resetReview = () => {
+          setReview({ completed: false, idea: '', boothReview: '', rating: 5 });
+          playAudioEffect('click');
+        };
+
         return (
           <UserContext.Provider value={{
             profile, updateProfile, bodyMissions, toggleBodyMission, bodyScore,
-            brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore, review, submitReviewData, reviewScore,
+            brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore, review, submitReviewData, resetReview, reviewScore,
             totalScore, isStickerActive, activeTab, setActiveTab, allReviews
           }}>
             {children}
@@ -351,9 +356,9 @@
         const tabs = [
           { id: 'mission', label: '미션', icon: '🏃', badge: `${bodyScore}/100` },
           { id: 'quiz', label: '퀴즈', icon: '❓', badge: `${brainQuizScore}/100` },
-          { id: 'review', label: '소감작성', icon: '💬', badge: `${reviewScore}/100` },
+          { id: 'review', label: '소감작성', icon: '📝', badge: `${reviewScore}/100` },
           { id: 'sticker', label: '스티커판', icon: '⭐', badge: isStickerActive ? 'ON!' : `${totalScore}p` },
-          { id: 'home', label: '', icon: '🏠', badge: null },
+          { id: 'home', labelメニュー: '', icon: '🏠', badge: null },
         ];
 
         return (
@@ -435,32 +440,34 @@
                 2026 학생 건강증진<br />
                 <span className="text-gradient">수업 페스티벌</span>
               </h1>
-              <p className="text-xs sm:text-sm text-cyan-300 font-extrabold tracking-tight">
-                바이브 코딩과 보건교육이 만나면?
+              <p className="text-xs sm:text-sm text-cyan-300 font-extrabold tracking-tight pt-2">
+                바이브 코딩과 보건교육이 만난다면?
               </p>
             </div>
 
             {/* Center Graphic Artwork */}
-            <div className="relative py-1 my-1 animate-float">
-              <div className="w-56 h-56 sm:w-64 sm:h-64 mx-auto rounded-full bg-gradient-to-tr from-purple-600 via-blue-600 to-cyan-400 p-1 shadow-[0_0_40px_rgba(6,182,212,0.5)] flex items-center justify-center">
-                <div className="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-between relative overflow-hidden py-7 px-4 text-center">
-                  <div className="absolute inset-0 bg-purple-900/20 rounded-full blur-xl"></div>
+            <div className="relative py-4 my-2 animate-float">
+              <div className="w-64 h-64 sm:w-72 sm:h-72 mx-auto rounded-full bg-gradient-to-tr from-purple-600 via-blue-600 to-cyan-400 p-1 shadow-[0_0_50px_rgba(6,182,212,0.6)] flex items-center justify-center relative">
+                <div className="w-full h-full bg-slate-950 rounded-full flex flex-col items-center justify-between relative py-6 px-3 text-center">
+                  <div className="absolute inset-0 bg-purple-900/20 rounded-full blur-xl pointer-events-none"></div>
                   
-                  {/* 1. TOP TITLE INSIDE CIRCLE */}
-                  <div className="text-[12px] sm:text-xs font-black text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.9)] whitespace-nowrap my-auto">
+                  {/* 1. TOP TITLE */}
+                  <div className="text-xs sm:text-sm font-black text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.9)] whitespace-nowrap pt-6 sm:pt-7">
                     AI랑 함께 하는 건강 퀴즈 미션 🎯
                   </div>
 
-                  {/* 2. MIDDLE EMOJIS */}
-                  <div className="text-3xl sm:text-4xl flex items-center justify-center gap-2.5 my-auto">
-                    <span>🏃‍♂️</span>
-                    <span className="text-4xl animate-bounce text-amber-300 drop-shadow-[0_0_12px_rgba(245,158,11,0.8)]">❓</span>
-                    <span>🤖</span>
+                  {/* 2. CENTER POPPING TEXT */}
+                  <div className="my-auto z-20 w-full flex items-center justify-center">
+                    <div className="py-3 px-4 sm:px-6 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 font-black text-base sm:text-xl rounded-full shadow-[0_0_35px_rgba(245,158,11,1)] border-4 border-yellow-100 animate-bounce whitespace-nowrap transform scale-125 tracking-tight">
+                      🎁 300점 획득시 선물이 팡팡! 🎉
+                    </div>
                   </div>
 
-                  {/* 3. BOTTOM SINGLE LINE TEXT */}
-                  <div className="text-[11px] sm:text-xs font-black text-amber-300 animate-pulse drop-shadow-[0_0_10px_rgba(245,158,11,1)] tracking-tight whitespace-nowrap my-auto">
-                    🎁 300점 획득시 선물이 팡팡! 🎉
+                  {/* 3. BOTTOM EMOJIS */}
+                  <div className="text-3xl sm:text-4xl flex items-center justify-center gap-3 pb-6 sm:pb-7">
+                    <span>🏃‍♂️</span>
+                    <span className="text-4xl animate-pulse text-amber-300 drop-shadow-[0_0_12px_rgba(245,158,11,0.9)]">❓</span>
+                    <span>🤖</span>
                   </div>
                 </div>
               </div>
@@ -702,7 +709,7 @@
         );
       }
 
-      // 3. 10-Question Quiz View (Quiz Step 7 set to '세상에서 가장 지루한 중학교는? ➔ 로딩중')
+      // 3. 10-Question Quiz View
       function QuizTab() {
         const { brainQuiz, completeBrainQuiz, resetBrainQuiz, brainQuizScore } = useUser();
         const [step, setStep] = useState(0);
@@ -903,7 +910,7 @@
                   </div>
                 )}
 
-                {/* Q7: 넌센스 퀴즈 - 로딩중 (세상에서 가장 지루한 중학교는?) */}
+                {/* Q7: 넌센스 퀴즈 - 로딩중 */}
                 {step === 6 && (
                   <div className="space-y-4">
                     <h3 className="font-extrabold text-sm text-white leading-relaxed">
@@ -1063,9 +1070,9 @@
         );
       }
 
-      // 4. Review View
+      // 4. Review View (Replaced 💬 speech bubble with 📝 note pad & pen emoji)
       function ReviewTab() {
-        const { review, submitReviewData, reviewScore } = useUser();
+        const { review, submitReviewData, resetReview, reviewScore } = useUser();
         const [idea, setIdea] = useState(review.idea || '');
         const [boothReview, setBoothReview] = useState(review.boothReview || '');
 
@@ -1110,8 +1117,21 @@
                 </button>
               </form>
             ) : (
-              <div className="glass-card rounded-3xl p-6 text-center space-y-3 border border-emerald-500/30">
+              <div className="glass-card rounded-3xl p-6 text-center space-y-4 border border-emerald-500/30">
+                <div className="text-4xl animate-bounce">📝</div>
                 <h3 className="text-lg font-black text-white">✅ 소감 제출 완료!</h3>
+                <p className="text-xs text-cyan-300 font-bold">소중한 의견과 아이디어가 성공적으로 작성되었습니다.</p>
+                
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => { resetReview(); }}
+                    className="px-4 py-2 bg-slate-900/90 text-slate-300 hover:text-white font-bold text-xs rounded-xl border border-slate-700 hover:border-pink-500/50 transition-all inline-flex items-center gap-1.5 shadow-md active:scale-95"
+                  >
+                    <span>🔄</span>
+                    <span>소감 다시 작성하기</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
