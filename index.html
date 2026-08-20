@@ -251,7 +251,13 @@
 
         const logoutProfile = () => {
           setProfile({ affiliation: '', name: '', avatar: '👨‍🏫' });
+          setBodyMissions({ walk10s: false, squats10: false, balance10s: false, water1cup: false, highfive: false });
+          setBrainQuiz({ completed: false, score: 0, level: '🏆 뇌 청춘 S급 (뇌 연령 10대 슈퍼 브레인!)' });
+          setReview({ completed: false, idea: '', boothReview: '', rating: 5 });
           localStorage.removeItem('cf_profile');
+          localStorage.removeItem('cf_body');
+          localStorage.removeItem('cf_brain_quiz');
+          localStorage.removeItem('cf_review');
           playAudioEffect('click');
         };
 
