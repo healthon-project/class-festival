@@ -375,8 +375,8 @@
           { id: 'mission', label: '미션', icon: '🏃', badge: `${bodyScore}/100` },
           { id: 'quiz', label: '퀴즈', icon: '❓', badge: `${brainQuizScore}/100` },
           { id: 'home', label: '홈', icon: '🏠', badge: null },
-          { id: 'review', label: '소감작성', icon: '📝', badge: `${reviewScore}/100` },
-          { id: 'sticker', label: '트로피', icon: '🏆', badge: isStickerActive ? 'ON!' : `${totalScore}p` },
+          { id: 'review', label: '아이디어 존', icon: '💡', badge: `${reviewScore}/100` },
+          { id: 'sticker', label: '트로피', icon: '🏆', badge: null },
         ];
 
         return (
@@ -636,26 +636,26 @@
             </div>
 
             <div className="space-y-3">
-              {/* Mission 1 */}
+              {/* Mission 1 (Purple Tone) */}
               <div className={`glass-card rounded-2xl p-4 border transition-all ${
                 bodyMissions.walk10s 
-                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
-                  : 'border-slate-800 bg-slate-900/60'
+                  ? 'border-purple-400 bg-purple-900/60 shadow-md shadow-purple-900/30' 
+                  : 'border-purple-500/30 bg-purple-950/20 shadow-sm'
               }`}>
                 <div className="flex justify-between items-center gap-2">
                   <div className={`px-3 py-1.5 rounded-xl border-2 transition-all ${
                     bodyMissions.walk10s 
-                      ? 'bg-emerald-950/80 border-emerald-400/80 text-emerald-300' 
-                      : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                      ? 'bg-purple-950 border-purple-400 text-purple-200' 
+                      : 'bg-slate-900 border-purple-500/70 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🦶 미션 1: 까치발 들기 30회</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🦶 미션 1: 까치발 들기 10회</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('walk10s')} 
                     className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
                       bodyMissions.walk10s 
-                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
-                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
+                        ? 'bg-purple-600 text-white border-purple-300 font-black shadow-md' 
+                        : 'bg-purple-900/40 text-purple-200 border-purple-500/40 hover:bg-purple-600 hover:text-white'
                     }`}
                   >
                     {bodyMissions.walk10s ? '✅ 완료 (20점)' : '미완료 (20점)'}
@@ -663,26 +663,26 @@
                 </div>
               </div>
 
-              {/* Mission 2 */}
+              {/* Mission 2 (Cyan Tone) */}
               <div className={`glass-card rounded-2xl p-4 border transition-all ${
                 bodyMissions.squats10 
-                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
-                  : 'border-slate-800 bg-slate-900/60'
+                  ? 'border-cyan-400 bg-cyan-900/60 shadow-md shadow-cyan-900/30' 
+                  : 'border-cyan-500/30 bg-cyan-950/20 shadow-sm'
               }`}>
                 <div className="flex justify-between items-center gap-2">
                   <div className={`px-3 py-1.5 rounded-xl border-2 transition-all ${
                     bodyMissions.squats10 
-                      ? 'bg-emerald-950/80 border-emerald-400/80 text-emerald-300' 
+                      ? 'bg-cyan-950 border-cyan-400 text-cyan-200' 
                       : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🏋️ 미션 2: 스쿼트 하기 30회</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🏋️ 미션 2: 스쿼트 하기 10회</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('squats10')} 
                     className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
                       bodyMissions.squats10 
-                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
-                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
+                        ? 'bg-cyan-600 text-white border-cyan-300 font-black shadow-md' 
+                        : 'bg-cyan-900/40 text-cyan-200 border-cyan-500/40 hover:bg-cyan-600 hover:text-white'
                     }`}
                   >
                     {bodyMissions.squats10 ? '✅ 완료 (20점)' : '미완료 (20점)'}
@@ -690,26 +690,26 @@
                 </div>
               </div>
 
-              {/* Mission 3 */}
+              {/* Mission 3 (Purple Tone) */}
               <div className={`glass-card rounded-2xl p-4 border transition-all ${
                 bodyMissions.balance10s 
-                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
-                  : 'border-slate-800 bg-slate-900/60'
+                  ? 'border-purple-400 bg-purple-900/60 shadow-md shadow-purple-900/30' 
+                  : 'border-purple-500/30 bg-purple-950/20 shadow-sm'
               }`}>
                 <div className="flex justify-between items-center gap-2">
                   <div className={`px-3 py-1.5 rounded-xl border-2 transition-all ${
                     bodyMissions.balance10s 
-                      ? 'bg-emerald-950/80 border-emerald-400/80 text-emerald-300' 
-                      : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                      ? 'bg-purple-950 border-purple-400 text-purple-200' 
+                      : 'bg-slate-900 border-purple-500/70 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👟 미션 3: 양발 제기차기 30회</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👟 미션 3: 양발 제기차기 10회</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('balance10s')} 
                     className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
                       bodyMissions.balance10s 
-                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
-                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
+                        ? 'bg-purple-600 text-white border-purple-300 font-black shadow-md' 
+                        : 'bg-purple-900/40 text-purple-200 border-purple-500/40 hover:bg-purple-600 hover:text-white'
                     }`}
                   >
                     {bodyMissions.balance10s ? '✅ 완료 (20점)' : '미완료 (20점)'}
@@ -717,16 +717,16 @@
                 </div>
               </div>
 
-              {/* Mission 4 */}
+              {/* Mission 4 (Cyan Tone) */}
               <div className={`glass-card rounded-2xl p-4 border transition-all ${
                 bodyMissions.water1cup 
-                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
-                  : 'border-slate-800 bg-slate-900/60'
+                  ? 'border-cyan-400 bg-cyan-900/60 shadow-md shadow-cyan-900/30' 
+                  : 'border-cyan-500/30 bg-cyan-950/20 shadow-sm'
               }`}>
                 <div className="flex justify-between items-center gap-2">
                   <div className={`px-3 py-1.5 rounded-xl border-2 transition-all ${
                     bodyMissions.water1cup 
-                      ? 'bg-emerald-950/80 border-emerald-400/80 text-emerald-300' 
+                      ? 'bg-cyan-950 border-cyan-400 text-cyan-200' 
                       : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
                   }`}>
                     <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🧘 미션 4: 눈 감고 버티기 10초</h3>
@@ -735,8 +735,8 @@
                     onClick={() => toggleBodyMission('water1cup')} 
                     className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
                       bodyMissions.water1cup 
-                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
-                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
+                        ? 'bg-cyan-600 text-white border-cyan-300 font-black shadow-md' 
+                        : 'bg-cyan-900/40 text-cyan-200 border-cyan-500/40 hover:bg-cyan-600 hover:text-white'
                     }`}
                   >
                     {bodyMissions.water1cup ? '✅ 완료 (20점)' : '미완료 (20점)'}
@@ -744,17 +744,17 @@
                 </div>
               </div>
 
-              {/* Mission 5 */}
+              {/* Mission 5 (Purple Tone) */}
               <div className={`glass-card rounded-2xl p-4 border transition-all ${
                 bodyMissions.highfive 
-                  ? 'border-emerald-500/50 bg-emerald-950/20 shadow-[0_0_15px_rgba(16,185,129,0.15)]' 
-                  : 'border-slate-800 bg-slate-900/60'
+                  ? 'border-purple-400 bg-purple-900/60 shadow-md shadow-purple-900/30' 
+                  : 'border-purple-500/30 bg-purple-950/20 shadow-sm'
               }`}>
                 <div className="flex justify-between items-center gap-2">
                   <div className={`px-3 py-1.5 rounded-xl border-2 transition-all ${
                     bodyMissions.highfive 
-                      ? 'bg-emerald-950/80 border-emerald-400/80 text-emerald-300' 
-                      : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                      ? 'bg-purple-950 border-purple-400 text-purple-200' 
+                      : 'bg-slate-900 border-purple-500/70 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
                   }`}>
                     <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👋 미션 5: 하이파이브 하기</h3>
                   </div>
@@ -762,8 +762,8 @@
                     onClick={() => toggleBodyMission('highfive')} 
                     className={`px-3.5 py-1.5 rounded-xl font-black text-xs whitespace-nowrap transition-all border ${
                       bodyMissions.highfive 
-                        ? 'bg-emerald-600 text-white border-emerald-400/40 shadow-md' 
-                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-purple-500 hover:bg-purple-950/40 hover:text-white'
+                        ? 'bg-purple-600 text-white border-purple-300 font-black shadow-md' 
+                        : 'bg-purple-900/40 text-purple-200 border-purple-500/40 hover:bg-purple-600 hover:text-white'
                     }`}
                   >
                     {bodyMissions.highfive ? '✅ 완료 (20점)' : '미완료 (20점)'}
@@ -1007,7 +1007,6 @@
                           className={`${btnStyle} ${opt.colorClass || ''}`}
                         >
                           <span>{opt.text}</span>
-                          {isCorrectSolved && opt.isCorrect && step !== 9 && <span className="text-xs font-black text-emerald-300">⭕ 정답!</span>}
                           {isWrongChoice && <span className="text-xs font-black text-rose-300">❌ 오답</span>}
                         </button>
                       );
@@ -1093,8 +1092,8 @@
                   }}
                   className="w-full py-3.5 bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 text-white font-black text-sm rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                  <span>📝</span>
-                  <span>소감 작성하러 가기 ➔</span>
+                  <span>💡</span>
+                  <span>아이디어 존 작성하러 가기 ➔</span>
                 </button>
               </div>
             )}
@@ -1105,21 +1104,24 @@
       // 4. Review View
       function ReviewTab() {
         const { review, submitReviewData, resetReview, reviewScore, setActiveTab } = useUser();
-        const [idea, setIdea] = useState(review.idea || '');
-        const [boothReview, setBoothReview] = useState(review.boothReview || '');
+        const [toolIdea, setToolIdea] = useState(review.toolIdea || review.idea || '');
+        const [classroomPain, setClassroomPain] = useState(review.classroomPain || '');
+        const [pledgeKeyword, setPledgeKeyword] = useState(review.pledgeKeyword || review.boothReview || '');
 
         const handleSubmit = (e) => {
           e.preventDefault();
-          if (!idea.trim() || !boothReview.trim()) return alert('모두 적어주세요!');
-          submitReviewData(idea, boothReview, 5);
+          if (!toolIdea.trim() || !classroomPain.trim() || !pledgeKeyword.trim()) {
+            return alert('3가지 항목을 모두 적어주세요!');
+          }
+          submitReviewData(toolIdea.trim(), classroomPain.trim(), pledgeKeyword.trim());
         };
 
         return (
           <div className="max-w-md mx-auto space-y-4 pt-2">
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
               <div>
-                <span className="text-[10px] font-bold text-pink-400">부스 소감 & 수업 아이디어</span>
-                <h2 className="text-xl font-black text-white">소감 한마디</h2>
+                <span className="text-[10px] font-bold text-pink-400">💡 아이디어 존</span>
+                <h2 className="text-xl font-black text-white">아이디어 존 3가지</h2>
               </div>
               <div className="text-2xl font-black text-cyan-400">{reviewScore} <span className="text-xs text-slate-400">/ 100p</span></div>
             </div>
@@ -1127,31 +1129,40 @@
             {!review.completed ? (
               <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-6 border border-purple-500/20 space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-1">💡 수업 적용 아이디어 *</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">🛠️ 1. 내가 만들고 싶은 수업 도구 *</label>
                   <textarea
-                    required rows={3} placeholder="예: 역사 퀴즈 봇 프롬프트 만들기 수업"
-                    value={idea} onChange={e => setIdea(e.target.value)}
+                    required rows={2} placeholder="예: 역사 퀴즈 봇 프롬프트, 칭찬 카드 생성기"
+                    value={toolIdea} onChange={e => setToolIdea(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-1">💬 부스 한줄 소감 *</label>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">😫 2. 교실 속 불편함 털어놓기 (AI가 대신 해결해 줬으면 하는 일) *</label>
+                  <textarea
+                    required rows={2} placeholder="예: 차시별 퀴즈 만들기, 행정 서식 자동화, 개별 평가문 작성"
+                    value={classroomPain} onChange={e => setClassroomPain(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-200 mb-1">✨ 3. 오늘 나의 다짐 & 키워드 *</label>
                   <input
-                    type="text" required placeholder="예: 최고로 재미있는 페스티벌 부스입니다!"
-                    value={boothReview} onChange={e => setBoothReview(e.target.value)}
+                    type="text" required placeholder="예: 매일 10분 바이브 코딩으로 수업 혁신하기! #바이브코딩"
+                    value={pledgeKeyword} onChange={e => setPledgeKeyword(e.target.value)}
                     className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none"
                   />
                 </div>
 
                 <button type="submit" className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-400 text-white font-black text-sm">
-                  소감 제출하기 ➔
+                  아이디어 제출하기 ➔
                 </button>
               </form>
             ) : (
               <div className="glass-card rounded-3xl p-6 text-center space-y-4 border border-emerald-500/30">
-                <div className="text-4xl animate-bounce">📝</div>
-                <h3 className="text-lg font-black text-white">✅ 소감 제출 완료!</h3>
+                <div className="text-4xl animate-bounce">💡</div>
+                <h3 className="text-lg font-black text-white">✅ 아이디어 제출 완료!</h3>
                 
                 <div className="pt-2 flex flex-col items-center gap-3">
                   <button
@@ -1160,7 +1171,7 @@
                     className="px-4 py-2 bg-slate-900/90 text-slate-300 hover:text-white font-bold text-xs rounded-xl border border-slate-700 hover:border-pink-500/50 transition-all inline-flex items-center gap-1.5 shadow-md active:scale-95"
                   >
                     <span>🔄</span>
-                    <span>소감 다시 작성하기</span>
+                    <span>다시 제출하기</span>
                   </button>
 
                   <div className="w-full pt-3 border-t border-purple-500/30">
@@ -1173,7 +1184,7 @@
                       className="w-full py-3.5 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-[0_0_20px_rgba(245,158,11,0.5)] border-2 border-yellow-100 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
                       <span>📸</span>
-                      <span>트로피를 캡쳐해서 패들렛에 올려주세요 ➔</span>
+                      <span>이 화면을 캡쳐해서 상단의 패들렛에 올려주세요.</span>
                     </button>
                   </div>
                 </div>
@@ -1221,7 +1232,7 @@
                     className="w-full py-3.5 px-3 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.6)] border-2 border-yellow-100 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 mt-2"
                   >
                     <span>📸</span>
-                    <span>이 화면을 캡쳐해서 홈 우상단의 패들렛에 올려주세요 ➔</span>
+                    <span>이 화면을 캡쳐해서 상단의 패들렛에 올려주세요.</span>
                   </button>
                 </div>
               ) : (
