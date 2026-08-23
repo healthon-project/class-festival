@@ -1022,12 +1022,14 @@
                     </div>
                   )}
 
-                  {/* Revealed Answer & Explanation Box ONLY ON CORRECT PICK (EXCEPT STEP 10) */}
-                  {isCorrectSolved && step !== 9 && (
+                  {/* Revealed Answer & Explanation Box */}
+                  {isCorrectSolved && (
                     <div className="space-y-2.5 pt-2">
-                      <div className="p-2.5 rounded-xl border border-emerald-500/60 bg-emerald-950/90 text-emerald-300 text-center font-black text-xs flex items-center justify-center gap-2 shadow-lg">
-                        <span>🎉 정답입니다!</span>
-                      </div>
+                      {step !== 9 && (
+                        <div className="p-2.5 rounded-xl border border-emerald-500/60 bg-emerald-950/90 text-emerald-300 text-center font-black text-xs flex items-center justify-center gap-2 shadow-lg">
+                          <span>🎉 정답입니다!</span>
+                        </div>
+                      )}
 
                       <div className="p-3.5 bg-purple-950/50 rounded-xl border border-purple-500/40 text-xs text-slate-300 space-y-1 text-left shadow-lg">
                         <div className="font-extrabold text-cyan-300 flex items-center gap-1.5">
