@@ -45,6 +45,9 @@
     
     <!-- Canvas Confetti CDN -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+    
+    <!-- html2canvas CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
     <style>
       .glass-card {
@@ -347,16 +350,16 @@
               </button>
 
               <div className="flex items-center space-x-2">
-                {/* Padlet Link Placeholder Button (Animated & Bouncing) */}
+                {/* Padlet Link Button */}
                 <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
+                  href="https://padlet.com/coral015_1/2026-48xspv3l5yzk8423"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
                     playAudioEffect('click');
-                    alert('📌 패들렛 바로가기 링크 준비 중입니다!');
                   }}
                   className="px-2.5 py-1 rounded-xl border text-[10px] font-black bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white border-pink-300 animate-bounce shadow-[0_0_15px_rgba(244,63,94,0.7)] flex items-center gap-1 hover:scale-110 active:scale-95 transition-transform"
-                  title="패들렛 바로가기 (나중에 링크 연결)"
+                  title="패들렛 바로가기"
                 >
                   <span className="text-xs">📌</span>
                   <span>패들렛</span>
@@ -1127,35 +1130,35 @@
             </div>
 
             {!review.completed ? (
-              <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-6 border border-purple-500/20 space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-1">🛠️ 1. 내가 만들고 싶은 수업 도구 *</label>
+              <form onSubmit={handleSubmit} className="glass-card rounded-3xl p-6 border border-purple-500/20 space-y-4 shadow-2xl">
+                <div className="space-y-1.5">
+                  <label className="block text-sm sm:text-base font-extrabold text-white">🛠️ 1. 내가 만들고 싶은 수업 도구 *</label>
                   <textarea
                     required rows={2} placeholder="예: 역사 퀴즈 봇 프롬프트, 칭찬 카드 생성기"
                     value={toolIdea} onChange={e => setToolIdea(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm sm:text-base text-white placeholder-slate-500 outline-none font-medium"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-1">😫 2. 교실 속 불편함 털어놓기 (AI가 대신 해결해 줬으면 하는 일) *</label>
+                <div className="space-y-1.5">
+                  <label className="block text-sm sm:text-base font-extrabold text-white">😫 2. 교실 속 불편함 털어놓기 (AI가 대신 해결해 줬으면 하는 일) *</label>
                   <textarea
                     required rows={2} placeholder="예: 차시별 퀴즈 만들기, 행정 서식 자동화, 개별 평가문 작성"
                     value={classroomPain} onChange={e => setClassroomPain(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-xs text-white outline-none"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm sm:text-base text-white placeholder-slate-500 outline-none font-medium"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-slate-200 mb-1">✨ 3. 오늘 나의 다짐 & 키워드 *</label>
+                <div className="space-y-1.5">
+                  <label className="block text-sm sm:text-base font-extrabold text-white">✨ 3. 오늘 나의 다짐 & 키워드 *</label>
                   <input
                     type="text" required placeholder="예: 매일 10분 바이브 코딩으로 수업 혁신하기! #바이브코딩"
                     value={pledgeKeyword} onChange={e => setPledgeKeyword(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white outline-none"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3.5 text-sm sm:text-base text-white placeholder-slate-500 outline-none font-medium"
                   />
                 </div>
 
-                <button type="submit" className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-400 text-white font-black text-sm">
+                <button type="submit" className="w-full py-4 rounded-2xl bg-gradient-to-r from-pink-500 to-cyan-400 text-white font-black text-sm sm:text-base shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
                   아이디어 제출하기 ➔
                 </button>
               </form>
@@ -1181,10 +1184,10 @@
                         playAudioEffect('fanfare');
                         setActiveTab('sticker');
                       }}
-                      className="w-full py-3.5 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-[0_0_20px_rgba(245,158,11,0.5)] border-2 border-yellow-100 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.6)] border-2 border-yellow-100 hover:scale-[1.03] active:scale-95 transition-all flex items-center justify-center gap-2"
                     >
-                      <span>📸</span>
-                      <span>이 화면을 캡쳐해서 상단의 패들렛에 올려주세요.</span>
+                      <span className="text-xl animate-bounce">✨</span>
+                      <span>트로피 메뉴로! ➔</span>
                     </button>
                   </div>
                 </div>
@@ -1196,16 +1199,89 @@
 
       // 5. Sticker Pass View
       function StickerTab() {
-        const { totalScore, isStickerActive, setActiveTab } = useUser();
+        const { profile, totalScore, isStickerActive, bodyScore, eyeQuizScore, reviewScore, setActiveTab } = useUser();
+        const trophyCardRef = useRef(null);
+        const [isCaptured, setIsCaptured] = useState(false);
+        const [toastMessage, setToastMessage] = useState('');
+        const padletUrl = 'https://padlet.com/coral015_1/2026-48xspv3l5yzk8423';
 
         useEffect(() => {
           if (isStickerActive && typeof confetti !== 'undefined') {
-            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            try {
+              const colors = ['#ff0055', '#ffaa00', '#00ffcc', '#0099ff', '#ff00ff', '#ffff00', '#00ff00', '#ff4500'];
+              confetti({ particleCount: 120, spread: 90, origin: { y: 0.5 }, colors });
+              setTimeout(() => {
+                confetti({ particleCount: 70, angle: 60, spread: 70, origin: { x: 0.15, y: 0.6 }, colors });
+              }, 250);
+              setTimeout(() => {
+                confetti({ particleCount: 70, angle: 120, spread: 70, origin: { x: 0.85, y: 0.6 }, colors });
+              }, 450);
+            } catch (e) {}
           }
         }, [isStickerActive]);
 
+        const showToast = (msg) => {
+          setToastMessage(msg);
+          setTimeout(() => setToastMessage(''), 4000);
+        };
+
+        const handleCapture = async () => {
+          if (typeof playAudioEffect !== 'undefined') playAudioEffect('click');
+          if (!trophyCardRef.current) return false;
+          try {
+            if (typeof html2canvas !== 'undefined') {
+              const canvas = await html2canvas(trophyCardRef.current, {
+                backgroundColor: '#0f172a',
+                scale: 2,
+                useCORS: true,
+              });
+              const dataUrl = canvas.toDataURL('image/png');
+              const link = document.createElement('a');
+              link.download = `${profile?.name || '참여자'}_미션완료_황금트로피.png`;
+              link.href = dataUrl;
+              link.click();
+
+              try {
+                canvas.toBlob(async (blob) => {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                  }
+                });
+              } catch (e) {}
+            }
+            setIsCaptured(true);
+            if (typeof playAudioEffect !== 'undefined') playAudioEffect('success');
+            showToast('📸 트로피 화면 캡처 완료! 이미지가 저장되었습니다.');
+            return true;
+          } catch (err) {
+            console.error(err);
+            setIsCaptured(true);
+            showToast('📸 화면 캡처가 완료되었습니다. 다운로드 폴더를 확인해 주세요!');
+            return true;
+          }
+        };
+
+        const handleUploadPadlet = async () => {
+          if (typeof playAudioEffect !== 'undefined') playAudioEffect('click');
+          if (!isCaptured) {
+            showToast('📸 캡처 진행 후 패들렛으로 연결합니다...');
+            await handleCapture();
+          }
+          showToast('📌 패들렛 창이 열렸습니다! Ctrl+V(붙여넣기) 또는 저장된 이미지를 올려주세요!');
+          setTimeout(() => {
+            window.open(padletUrl, '_blank');
+          }, 450);
+        };
+
         return (
           <div className="max-w-md mx-auto space-y-5 pt-2">
+            {toastMessage && (
+              <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white px-4 py-2.5 rounded-2xl font-black text-xs shadow-2xl animate-bounce flex items-center gap-2 border border-yellow-200">
+                <span>✨</span>
+                <span>{toastMessage}</span>
+              </div>
+            )}
+
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-amber-400">최종 완주 현황</span>
@@ -1215,36 +1291,189 @@
             </div>
 
             {/* Simple Sticker Status Card */}
-            <div className={`rounded-3xl p-8 text-center ${isStickerActive ? 'glass-neon border-amber-400' : 'glass-card border-slate-800'}`}>
+            <div
+              ref={trophyCardRef}
+              className={`rounded-3xl p-6 text-center transition-all ${isStickerActive ? 'glass-neon border-amber-400 shadow-[0_0_35px_rgba(245,158,11,0.4)]' : 'glass-card border-slate-800'}`}
+            >
               {isStickerActive ? (
-                <div className="py-2 space-y-3">
-                  <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl bg-amber-400 text-slate-950 shadow-[0_0_30px_rgba(245,158,11,0.9)] animate-bounce">
+                <div className="py-2 space-y-4">
+                  <div className="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl bg-gradient-to-tr from-pink-500 via-amber-400 via-emerald-400 to-cyan-400 text-slate-950 shadow-[0_0_50px_rgba(236,72,153,0.8)] animate-pulse border-4 border-yellow-200">
                     🏆
                   </div>
-                  <h3 className="text-xl font-black gold-gradient">미션을 모두 완료하였습니다! 🎉</h3>
                   
-                  <button
-                    type="button"
-                    onClick={() => {
-                      playAudioEffect('click');
-                      setActiveTab('home');
-                    }}
-                    className="w-full py-3.5 px-3 bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 font-black text-xs sm:text-sm rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.6)] border-2 border-yellow-100 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 mt-2"
-                  >
-                    <span>📸</span>
-                    <span>이 화면을 캡쳐해서 상단의 패들렛에 올려주세요.</span>
-                  </button>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent animate-pulse flex items-center justify-center gap-2 drop-shadow-md">
+                      <span>미션을 모두 완료하였습니다!</span>
+                      <span className="text-2xl animate-bounce inline-block">🎉</span>
+                    </h3>
+                    {profile?.name && (
+                      <p className="text-xs text-amber-300 font-bold mt-1.5">
+                        [{profile.affiliation || '전북특별자치도교육청'}] {profile.name} 선생님
+                      </p>
+                    )}
+                  </div>
+
+                  {/* 캡처 버튼 & 패들렛 올리는 버튼 (매끄러운 2단계 연동) */}
+                  <div className="pt-2 space-y-3">
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {/* 1. 캡처 버튼 */}
+                      <button
+                        type="button"
+                        onClick={handleCapture}
+                        className={`py-3.5 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
+                          isCaptured
+                            ? 'bg-slate-800 text-emerald-400 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                            : 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-yellow-100 hover:scale-[1.03] shadow-[0_0_20px_rgba(245,158,11,0.5)]'
+                        }`}
+                      >
+                        <span className="text-base">{isCaptured ? '✅' : '📸'}</span>
+                        <span>{isCaptured ? '캡처 완료!' : '화면 캡처하기'}</span>
+                      </button>
+
+                      {/* 2. 패들렛 올리기 버튼 */}
+                      <a
+                        href={padletUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => {
+                          if (typeof playAudioEffect !== 'undefined') playAudioEffect('click');
+                          if (!isCaptured) {
+                            handleCapture();
+                          }
+                        }}
+                        className={`py-3.5 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
+                          isCaptured
+                            ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white border-pink-200 animate-pulse shadow-[0_0_25px_rgba(244,63,94,0.8)] scale-[1.03]'
+                            : 'bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-purple-400 hover:scale-[1.02]'
+                        }`}
+                      >
+                        <span className="text-base">📌</span>
+                        <span>{isCaptured ? '패들렛에 올리기 ➔' : '패들렛에 올리기'}</span>
+                      </a>
+                    </div>
+
+                    {/* 안내 가이드 */}
+                    <div className="bg-slate-900/90 rounded-2xl p-3 border border-slate-800 text-left text-xs space-y-1">
+                      <div className="font-bold text-amber-400 flex items-center gap-1">
+                        <span>💡</span> <span>매끄러운 2단계 연동 가이드:</span>
+                      </div>
+                      <ol className="text-[11px] text-slate-300 space-y-1 list-decimal list-inside pl-0.5">
+                        <li className={isCaptured ? 'text-emerald-400 font-bold' : ''}>
+                          <strong>[화면 캡처하기]</strong> 버튼을 눌러 트로피 수료증 저장 {isCaptured && '✓'}
+                        </li>
+                        <li className={isCaptured ? 'text-pink-400 font-bold animate-pulse' : ''}>
+                          <strong>[패들렛에 올리기]</strong> 버튼을 클릭하여 패들렛으로 이동 후 붙여넣기(Ctrl+V)
+                        </li>
+                      </ol>
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  <div className="w-20 h-20 rounded-full mx-auto flex items-center justify-center text-4xl bg-slate-900 border border-slate-800 text-amber-400 animate-pulse">
-                    🔥
+                <div className="space-y-3 py-2">
+                  <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl bg-slate-900 border-2 border-amber-400 text-amber-400 animate-pulse shadow-[0_0_25px_rgba(245,158,11,0.5)]">
+                    ⚡
                   </div>
-                  <h3 className="text-base font-black text-white">아자아자 화이팅! 💪</h3>
-                  <p className="text-xs text-slate-400">300점 도달 시 황금 트로피 불이 켜집니다! ({300 - totalScore}점 남음)</p>
+                  <h3 className="text-base font-black text-white">미션 완주 진행 중! 💪</h3>
+                  <p className="text-xs text-slate-300">
+                    300점 도달까지 <strong className="text-amber-400 text-sm font-extrabold">{300 - totalScore}점</strong> 남았습니다!
+                  </p>
+
+                  <div className="w-full bg-slate-900 rounded-full h-3.5 border border-slate-800 overflow-hidden p-0.5 max-w-xs mx-auto">
+                    <div
+                      className="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-400 h-full rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(6,182,212,0.8)]"
+                      style={{ width: `${(totalScore / 300) * 100}%` }}
+                    />
+                  </div>
                 </div>
               )}
             </div>
+
+            {!isStickerActive && (
+              <div className="glass-card rounded-3xl p-5 border-2 border-amber-500/40 text-center space-y-4 shadow-2xl relative overflow-hidden bg-slate-900/90">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+                
+                <div className="space-y-1">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                    📌 부족한 점수 모으기
+                  </span>
+                  <h3 className="text-base font-extrabold text-white">
+                    아래 메뉴에서 남은 미션을 완료해 보세요!
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    각 메뉴 버튼을 누르면 해당 미션으로 바로 이동합니다.
+                  </p>
+                </div>
+
+                {/* 부족한 메뉴별 바로가기 버튼 */}
+                <div className="space-y-2 pt-1 text-left">
+                  {bodyScore < 100 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playAudioEffect('click');
+                        setActiveTab('mission');
+                      }}
+                      className="w-full p-3 rounded-2xl bg-purple-950/60 hover:bg-purple-900/70 border border-purple-500/40 text-purple-200 font-bold text-xs flex items-center justify-between transition-all hover:scale-[1.02] active:scale-95 group shadow-md"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xl">🏃‍♂️</span>
+                        <div>
+                          <span className="font-extrabold text-white block">신체미션 메뉴</span>
+                          <span className="text-[10px] text-purple-300">현재 {bodyScore}/100점 ({100 - bodyScore}점 더 도전 가능)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-black text-amber-400 group-hover:translate-x-1 transition-transform bg-amber-400/10 px-2 py-1 rounded-lg border border-amber-400/30">
+                        이동 ➔
+                      </span>
+                    </button>
+                  )}
+
+                  {eyeQuizScore < 100 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playAudioEffect('click');
+                        setActiveTab('quiz');
+                      }}
+                      className="w-full p-3 rounded-2xl bg-cyan-950/60 hover:bg-cyan-900/70 border border-cyan-500/40 text-cyan-200 font-bold text-xs flex items-center justify-between transition-all hover:scale-[1.02] active:scale-95 group shadow-md"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xl">👁️</span>
+                        <div>
+                          <span className="font-extrabold text-white block">눈 퀴즈 메뉴</span>
+                          <span className="text-[10px] text-cyan-300">현재 0/100점 (퀴즈 풀고 100점 획득)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-black text-amber-400 group-hover:translate-x-1 transition-transform bg-amber-400/10 px-2 py-1 rounded-lg border border-amber-400/30">
+                        이동 ➔
+                      </span>
+                    </button>
+                  )}
+
+                  {reviewScore < 100 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playAudioEffect('click');
+                        setActiveTab('review');
+                      }}
+                      className="w-full p-3 rounded-2xl bg-pink-950/60 hover:bg-pink-900/70 border border-pink-500/40 text-pink-200 font-bold text-xs flex items-center justify-between transition-all hover:scale-[1.02] active:scale-95 group shadow-md"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-xl">💡</span>
+                        <div>
+                          <span className="font-extrabold text-white block">아이디어 존 메뉴</span>
+                          <span className="text-[10px] text-pink-300">현재 0/100점 (소감 작성 후 100점 획득)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs font-black text-amber-400 group-hover:translate-x-1 transition-transform bg-amber-400/10 px-2 py-1 rounded-lg border border-amber-400/30">
+                        이동 ➔
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         );
       }
