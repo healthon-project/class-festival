@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUser, playAudioEffect } from '../context/UserContext';
-import { Sparkles, Building2, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Sparkles, Building2, User, ArrowRight, ShieldCheck, LogOut } from 'lucide-react';
 
 const AVATARS = [
   { emoji: '👨‍🏫', label: '바이브 교사' },
@@ -11,7 +11,7 @@ const AVATARS = [
 ];
 
 export default function LoginTab() {
-  const { profile, loginUser, setActiveTab } = useUser();
+  const { profile, loginUser, logoutUser, setActiveTab } = useUser();
   const [affiliation, setAffiliation] = useState(profile.affiliation || '');
   const [name, setName] = useState(profile.name || '');
   const [selectedAvatar, setSelectedAvatar] = useState(profile.avatar || '👨‍🏫');
@@ -73,18 +73,31 @@ export default function LoginTab() {
               className="w-full bg-slate-900/90 border border-slate-700 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all"
             />
           </div>
-
-
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-500 text-white font-extrabold text-base shadow-lg shadow-purple-600/30 hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-        >
-          <Sparkles className="w-5 h-5" />
-          <span>바이브코딩 건강 탐험 시작하기</span>
-          <ArrowRight className="w-5 h-5" />
-        </button>
+        {/* Login & Logout Buttons (Equal size, different colors) */}
+        <div className="grid grid-cols-2 gap-2.5 pt-1">
+          <button
+            type="submit"
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 text-slate-950 font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>🔑 로그인</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              logoutUser();
+              setAffiliation('');
+              setName('');
+            }}
+            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-rose-600 via-red-600 to-pink-600 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>🚪 로그아웃</span>
+          </button>
+        </div>
 
         {profile.name && (
           <div className="pt-2 text-center">
