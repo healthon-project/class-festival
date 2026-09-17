@@ -341,7 +341,7 @@ export default function StickerTab() {
               }`}
             >
               <ExternalLink className="w-4 h-4" />
-              <span>{isCaptured ? '패들렛에 올리기 ➔' : '패들렛에 올리기'}</span>
+              <span>패들렛에 올리기</span>
             </a>
           </div>
         </div>
