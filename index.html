@@ -1230,14 +1230,51 @@
                     🏆
                   </div>
                   
-                  <div className="space-y-1.5">
-                    <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent flex items-center justify-center gap-2 drop-shadow-md">
-                      <span>🏆 탐험 완주!</span>
-                      <span className="text-2xl animate-bounce inline-block">🎉</span>
-                    </h3>
-                    <p className="text-sm sm:text-base font-extrabold text-cyan-300 mt-1">
-                      미션을 모두 완료하였습니다!
-                    </p>
+                  <div className="space-y-3">
+                    <div className="space-y-1.5">
+                      <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent flex items-center justify-center gap-2 drop-shadow-md">
+                        <span>🏆 탐험 완주!</span>
+                        <span className="text-2xl animate-bounce inline-block">🎉</span>
+                      </h3>
+                      <p className="text-sm sm:text-base font-extrabold text-cyan-300 mt-1">
+                        미션을 모두 완료하였습니다!
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2.5 pt-1">
+                      <button
+                        type="button"
+                        onClick={handleCapture}
+                        className={`py-3.5 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
+                          isCaptured
+                            ? 'bg-slate-800 text-emerald-400 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                            : 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-yellow-100 hover:scale-[1.03] shadow-[0_0_20px_rgba(245,158,11,0.5)]'
+                        }`}
+                      >
+                        <span className="text-base">{isCaptured ? '✅' : '📸'}</span>
+                        <span>{isCaptured ? '캡처 완료!' : '화면 캡처하기'}</span>
+                      </button>
+
+                      <a
+                        href={padletUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => {
+                          if (typeof playAudioEffect !== 'undefined') playAudioEffect('click');
+                          if (!isCaptured) {
+                            handleCapture();
+                          }
+                        }}
+                        className={`py-3.5 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
+                          isCaptured
+                            ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white border-pink-200 animate-pulse shadow-[0_0_25px_rgba(244,63,94,0.8)] scale-[1.03]'
+                            : 'bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-purple-400 hover:scale-[1.02]'
+                        }`}
+                      >
+                        <span className="text-base">📌</span>
+                        <span>{isCaptured ? '패들렛에 올리기 ➔' : '패들렛에 올리기'}</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               ) : (
