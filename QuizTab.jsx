@@ -117,49 +117,43 @@ export default function QuizTab() {
   return (
     <div className="max-w-md mx-auto space-y-5 pb-24 animate-fadeIn">
       {/* Quiz Header Card */}
-      <div className="glass-card rounded-3xl p-5 border border-purple-500/40 text-center space-y-2 shadow-2xl">
+      <div className="glass-card rounded-3xl p-5 border border-purple-500/40 text-center shadow-2xl">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] sm:text-xs font-extrabold text-cyan-400 tracking-tight flex items-center gap-1">
-            <Zap className="w-3.5 h-3.5 text-amber-400" /> 뇌 자극 5단계 챌린지 (문항당 20점)
+          <span className="text-xs sm:text-sm font-extrabold text-cyan-400 tracking-tight flex items-center gap-1">
+            <Zap className="w-4 h-4 text-amber-400" /> 뇌 자극 5단계 챌린지 (문항당 20점)
           </span>
-          <span className="text-sm font-black text-amber-300 bg-slate-900 px-3 py-1 rounded-full border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center gap-1 animate-bounce">
+          <span className="text-base font-black text-amber-300 bg-slate-900 px-3.5 py-1 rounded-full border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center gap-1 animate-bounce">
             <span>✨</span>
             <span>{brainQuiz.completed ? brainQuizScore : score}</span>
-            <span className="text-[10px] text-slate-400 font-normal">/ 100p</span>
+            <span className="text-xs text-slate-400 font-normal">/ 100p</span>
           </span>
         </div>
-        <h2 className="text-lg sm:text-xl font-black text-amber-300 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis drop-shadow-[0_0_12px_rgba(245,158,11,0.6)] pt-1">
-          🧠 당신의 뇌 나이는 지금 몇 살? ❓
-        </h2>
       </div>
 
       {!brainQuiz.completed ? (
         <div className="glass-card rounded-3xl p-6 border border-purple-500/20 text-center space-y-5 shadow-2xl">
-          <div className="flex justify-between items-center text-xs font-bold text-purple-300 border-b border-purple-500/20 pb-2">
-            <span>❓ 뇌 활성화 트레이닝</span>
-            <span>문제 {step + 1} / 5</span>
-          </div>
+
 
           <div className="space-y-4 text-left">
-            <h3 className="font-extrabold text-sm sm:text-base text-white leading-relaxed">
-              <span className="text-cyan-300 font-black mr-1.5">{currentQ.title}</span>
+            <h3 className="font-extrabold text-base sm:text-lg text-white leading-relaxed">
+              <span className="text-cyan-300 font-black mr-2">{currentQ.title}</span>
               {currentQ.question}
             </h3>
             {currentQ.banner}
 
-            <div className={`grid gap-2.5 pt-1 ${currentQ.options.length > 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+            <div className={`grid gap-3 pt-1 ${currentQ.options.length > 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
               {currentQ.options.map((opt, idx) => {
                 const isWrongChoice = wrongIndices.includes(idx);
-                let btnStyle = "w-full py-3.5 px-4 bg-slate-900/90 text-slate-100 font-bold text-xs sm:text-sm rounded-xl border border-slate-700 hover:border-purple-500 hover:bg-purple-950/30 transition-all text-left flex items-center justify-between";
+                let btnStyle = "w-full py-4 px-4 bg-slate-900/90 text-slate-100 font-bold text-sm sm:text-base rounded-xl border border-slate-700 hover:border-purple-500 hover:bg-purple-950/30 transition-all text-left flex items-center justify-between";
 
                 if (isCorrectSolved) {
                   if (opt.isCorrect) {
-                    btnStyle = "w-full py-3.5 px-4 bg-emerald-950/90 border-2 border-emerald-400 text-emerald-200 font-black text-xs sm:text-sm rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] text-left flex items-center justify-between animate-pulse";
+                    btnStyle = "w-full py-4 px-4 bg-emerald-950/90 border-2 border-emerald-400 text-emerald-200 font-black text-sm sm:text-base rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] text-left flex items-center justify-between animate-pulse";
                   } else {
-                    btnStyle = "w-full py-3.5 px-4 bg-slate-900/40 text-slate-500 font-bold text-xs sm:text-sm rounded-xl border border-slate-800/50 opacity-40 text-left flex items-center justify-between cursor-not-allowed";
+                    btnStyle = "w-full py-4 px-4 bg-slate-900/40 text-slate-500 font-bold text-sm sm:text-base rounded-xl border border-slate-800/50 opacity-40 text-left flex items-center justify-between cursor-not-allowed";
                   }
                 } else if (isWrongChoice) {
-                  btnStyle = "w-full py-3.5 px-4 bg-rose-950/80 border-2 border-rose-500 text-rose-300 font-bold text-xs sm:text-sm rounded-xl text-left flex items-center justify-between opacity-70 cursor-not-allowed";
+                  btnStyle = "w-full py-4 px-4 bg-rose-950/80 border-2 border-rose-500 text-rose-300 font-bold text-sm sm:text-base rounded-xl text-left flex items-center justify-between opacity-70 cursor-not-allowed";
                 }
 
                 return (
@@ -170,7 +164,7 @@ export default function QuizTab() {
                     className={`${btnStyle} ${opt.colorClass || ''}`}
                   >
                     <span>{opt.text}</span>
-                    {isWrongChoice && <span className="text-xs font-black text-rose-300">❌ 오답</span>}
+                    {isWrongChoice && <span className="text-xs sm:text-sm font-black text-rose-300">❌ 오답</span>}
                   </button>
                 );
               })}
@@ -178,7 +172,7 @@ export default function QuizTab() {
 
             {/* Feedback Banner on Wrong Pick */}
             {!isCorrectSolved && wrongIndices.length > 0 && (
-              <div className="p-3 bg-amber-950/80 border-2 border-amber-500/80 text-amber-200 text-center font-extrabold text-xs rounded-xl animate-bounce shadow-lg flex items-center justify-center gap-2">
+              <div className="p-3.5 bg-amber-950/80 border-2 border-amber-500/80 text-amber-200 text-center font-black text-sm rounded-xl animate-bounce shadow-lg flex items-center justify-center gap-2">
                 <span>😅</span>
                 <span>다시 한번 풀어 보세요!</span>
               </div>
@@ -188,17 +182,17 @@ export default function QuizTab() {
             {isCorrectSolved && (
               <div className="space-y-2.5 pt-2">
                 {step !== 4 && (
-                  <div className="p-2.5 rounded-xl border border-emerald-500/60 bg-emerald-950/90 text-emerald-300 text-center font-black text-xs flex items-center justify-center gap-2 shadow-lg">
+                  <div className="p-3 rounded-xl border border-emerald-500/60 bg-emerald-950/90 text-emerald-300 text-center font-black text-sm flex items-center justify-center gap-2 shadow-lg">
                     <span>🎉 정답입니다! (+20점)</span>
                   </div>
                 )}
 
-                <div className="p-3.5 bg-purple-950/50 rounded-xl border border-purple-500/40 text-xs text-slate-300 space-y-1 text-left shadow-lg">
-                  <div className="font-extrabold text-cyan-300 flex items-center gap-1.5">
+                <div className="p-4 bg-purple-950/50 rounded-xl border border-purple-500/40 text-xs sm:text-sm text-slate-300 space-y-1.5 text-left shadow-lg">
+                  <div className="font-extrabold text-cyan-300 flex items-center gap-1.5 text-sm sm:text-base">
                     <span>💡</span>
                     <span>정답: {currentQ.answerText}</span>
                   </div>
-                  <p className="text-[11px] text-slate-200 leading-snug">
+                  <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
                     해설: {currentQ.explanation}
                   </p>
                 </div>
@@ -217,27 +211,27 @@ export default function QuizTab() {
                 setStep((s) => Math.max(0, s - 1));
               }}
               disabled={step === 0}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-extrabold flex items-center gap-1 transition-all ${
                 step === 0
                   ? 'bg-slate-900/40 text-slate-600 border border-slate-800/50 cursor-not-allowed opacity-40'
                   : 'bg-slate-900 text-slate-200 border border-slate-700 hover:border-purple-500 hover:text-white'
               }`}
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="w-4 h-4" />
               <span>이전</span>
             </button>
 
-            <span className="text-[11px] font-black text-purple-300 bg-slate-900 px-2.5 py-0.5 rounded-full border border-purple-500/30">
+            <span className="text-xs sm:text-sm font-black text-purple-300 bg-slate-900 px-3 py-1 rounded-full border border-purple-500/30">
               {step + 1} / 5
             </span>
 
             <button
               type="button"
               onClick={handleNextStep}
-              className="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-xs font-black rounded-xl border border-cyan-400/40 shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-xs sm:text-sm font-black rounded-xl border border-cyan-400/40 shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
             >
               <span>{step === 4 ? '완료' : '다음'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -247,26 +241,36 @@ export default function QuizTab() {
             <Award className="w-10 h-10" />
           </div>
           <div>
-            <h3 className="text-xl font-black text-white">🎉 퀴즈 5문항 완주 완료! (100점 획득)</h3>
-            <p className="text-xs text-slate-300 mt-1">참여 완료로 <strong className="text-cyan-300">100점</strong>을 획득하셨습니다.</p>
+            <h3 className="text-xl sm:text-2xl font-black text-white">🎉 퀴즈 5문항 완주 완료! (100점 획득)</h3>
+            <p className="text-sm text-slate-300 mt-1">참여 완료로 <strong className="text-cyan-300">100점</strong>을 획득하셨습니다.</p>
           </div>
 
-          <div className="bg-slate-900/80 rounded-2xl p-4 border border-slate-800 space-y-2">
-            <div className="text-base sm:text-lg font-black text-cyan-300">
-              {brainQuiz.level}
-            </div>
+          <div className="bg-slate-900/80 rounded-2xl p-4 border border-slate-800">
+            {(() => {
+              const levelStr = brainQuiz.level || '';
+              const match = levelStr.match(/^(.*?)\s*(\(.*?\))$/);
+              if (match) {
+                return (
+                  <div className="flex flex-col items-center justify-center text-center space-y-1">
+                    <div className="text-xl sm:text-2xl font-black text-cyan-300">{match[1]}</div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-300">{match[2]}</div>
+                  </div>
+                );
+              }
+              return <div className="text-lg sm:text-xl font-black text-cyan-300 text-center">{levelStr}</div>;
+            })()}
           </div>
 
           <div className="flex gap-2">
             <button
               onClick={handleRestart}
-              className="flex-1 py-3 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 flex items-center justify-center gap-1"
+              className="flex-1 py-3.5 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs sm:text-sm hover:bg-slate-700 flex items-center justify-center gap-1"
             >
               <RotateCcw className="w-4 h-4" /> 다시 도전하기
             </button>
             <button
               onClick={() => setActiveTab('review')}
-              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-extrabold text-xs shadow-md hover:scale-105"
+              className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 text-white font-extrabold text-xs sm:text-sm shadow-md hover:scale-105"
             >
               다음: 아이디어 존 작성 (100점) ➔
             </button>
