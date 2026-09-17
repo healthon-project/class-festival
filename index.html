@@ -1230,71 +1230,14 @@
                     🏆
                   </div>
                   
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent animate-pulse flex items-center justify-center gap-2 drop-shadow-md">
-                      <span>미션을 모두 완료하였습니다!</span>
+                  <div className="space-y-1.5">
+                    <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent flex items-center justify-center gap-2 drop-shadow-md">
+                      <span>🏆 탐험 완주!</span>
                       <span className="text-2xl animate-bounce inline-block">🎉</span>
                     </h3>
-                    {profile?.name && (
-                      <p className="text-xs text-amber-300 font-bold mt-1.5">
-                        [{profile.affiliation || '전북특별자치도교육청'}] {profile.name} 선생님
-                      </p>
-                    )}
-                  </div>
-
-                  {/* 캡처 버튼 & 패들렛 올리는 버튼 (매끄러운 2단계 연동) */}
-                  <div className="pt-2 space-y-3">
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {/* 1. 캡처 버튼 */}
-                      <button
-                        type="button"
-                        onClick={handleCapture}
-                        className={`py-3.5 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
-                          isCaptured
-                            ? 'bg-slate-800 text-emerald-400 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                            : 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-yellow-100 hover:scale-[1.03] shadow-[0_0_20px_rgba(245,158,11,0.5)]'
-                        }`}
-                      >
-                        <span className="text-base">{isCaptured ? '✅' : '📸'}</span>
-                        <span>{isCaptured ? '캡처 완료!' : '화면 캡처하기'}</span>
-                      </button>
-
-                      {/* 2. 패들렛 올리기 버튼 */}
-                      <a
-                        href={padletUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => {
-                          if (typeof playAudioEffect !== 'undefined') playAudioEffect('click');
-                          if (!isCaptured) {
-                            handleCapture();
-                          }
-                        }}
-                        className={`py-3.5 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
-                          isCaptured
-                            ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white border-pink-200 animate-pulse shadow-[0_0_25px_rgba(244,63,94,0.8)] scale-[1.03]'
-                            : 'bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-purple-400 hover:scale-[1.02]'
-                        }`}
-                      >
-                        <span className="text-base">📌</span>
-                        <span>{isCaptured ? '패들렛에 올리기 ➔' : '패들렛에 올리기'}</span>
-                      </a>
-                    </div>
-
-                    {/* 안내 가이드 */}
-                    <div className="bg-slate-900/90 rounded-2xl p-3 border border-slate-800 text-left text-xs space-y-1">
-                      <div className="font-bold text-amber-400 flex items-center gap-1">
-                        <span>💡</span> <span>매끄러운 2단계 연동 가이드:</span>
-                      </div>
-                      <ol className="text-[11px] text-slate-300 space-y-1 list-decimal list-inside pl-0.5">
-                        <li className={isCaptured ? 'text-emerald-400 font-bold' : ''}>
-                          <strong>[화면 캡처하기]</strong> 버튼을 눌러 트로피 수료증 저장 {isCaptured && '✓'}
-                        </li>
-                        <li className={isCaptured ? 'text-pink-400 font-bold animate-pulse' : ''}>
-                          <strong>[패들렛에 올리기]</strong> 버튼을 클릭하여 패들렛으로 이동 후 붙여넣기(Ctrl+V)
-                        </li>
-                      </ol>
-                    </div>
+                    <p className="text-sm sm:text-base font-extrabold text-cyan-300 mt-1">
+                      미션을 모두 완료하였습니다!
+                    </p>
                   </div>
                 </div>
               ) : (

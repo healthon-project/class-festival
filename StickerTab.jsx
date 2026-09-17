@@ -299,68 +299,14 @@ export default function StickerTab() {
           </span>
         </div>
 
-        <div className="space-y-3">
-          <div className="space-y-1.5">
-            <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent flex items-center justify-center gap-2 drop-shadow-md">
-              <span>{levelTitle} 달성!</span>
-              <span className="text-2xl animate-bounce inline-block">🎉</span>
-            </h3>
-            {profile?.name && (
-              <p className="text-xs text-amber-300 font-bold mt-1.5">
-                [{profile.affiliation || '전북특별자치도교육청'}] {profile.name} 선생님
-              </p>
-            )}
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5 pt-1">
-            <button
-              type="button"
-              onClick={handleCapture}
-              className={`py-3 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
-                isCaptured
-                  ? 'bg-slate-800 text-emerald-400 border-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                  : 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-yellow-100 hover:scale-[1.03] shadow-[0_0_20px_rgba(245,158,11,0.5)]'
-              }`}
-            >
-              {isCaptured ? <Check className="w-4 h-4 text-emerald-400" /> : <Camera className="w-4 h-4" />}
-              <span>{isCaptured ? '캡처 완료!' : '화면 캡처하기'}</span>
-            </button>
-
-            <a
-              href={padletUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => {
-                playAudioEffect('click');
-                if (!isCaptured) {
-                  handleCapture();
-                }
-              }}
-              className={`py-3 px-2 rounded-2xl font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all shadow-lg border-2 active:scale-95 ${
-                isCaptured
-                  ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500 text-white border-pink-200 animate-pulse shadow-[0_0_25px_rgba(244,63,94,0.8)] scale-[1.03]'
-                  : 'bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-purple-400 hover:scale-[1.02]'
-              }`}
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>{isCaptured ? '패들렛에 올리기 ➔' : '패들렛에 올리기'}</span>
-            </a>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80">
-          <div className="p-2 rounded-xl text-center border text-[11px] bg-purple-950/40 border-purple-500/40 text-purple-300">
-            <div className="font-bold">신체미션</div>
-            <div className="font-black text-xs">{bodyScore}/100</div>
-          </div>
-          <div className="p-2 rounded-xl text-center border text-[11px] bg-cyan-950/40 border-cyan-500/40 text-cyan-300">
-            <div className="font-bold">눈 퀴즈</div>
-            <div className="font-black text-xs">{eyeQuizScore}/100</div>
-          </div>
-          <div className="p-2 rounded-xl text-center border text-[11px] bg-pink-950/40 border-pink-500/40 text-pink-300">
-            <div className="font-bold">아이디어존</div>
-            <div className="font-black text-xs">{reviewScore}/100</div>
-          </div>
+        <div className="space-y-1.5">
+          <h3 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-pink-400 via-amber-300 via-emerald-300 to-cyan-400 bg-clip-text text-transparent flex items-center justify-center gap-2 drop-shadow-md">
+            <span>{levelTitle} 달성!</span>
+            <span className="text-2xl animate-bounce inline-block">🎉</span>
+          </h3>
+          <p className="text-sm sm:text-base font-extrabold text-cyan-300">
+            미션을 모두 완료하였습니다!
+          </p>
         </div>
       </div>
 
