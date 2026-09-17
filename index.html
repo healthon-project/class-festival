@@ -603,6 +603,8 @@
         const [squats, setSquats] = useState(0);
         const [balTimer, setBalTimer] = useState(10);
         const [isBalActive, setIsBalActive] = useState(false);
+        const [standTimer, setStandTimer] = useState(10);
+        const [isStandActive, setIsStandActive] = useState(false);
 
         useEffect(() => {
           let interval = null;
@@ -618,11 +620,22 @@
           return () => clearInterval(interval);
         }, [isBalActive, balTimer]);
 
+        useEffect(() => {
+          let interval = null;
+          if (isStandActive && standTimer > 0) interval = setInterval(() => setStandTimer(t => t - 1), 1000);
+          else if (standTimer === 0 && isStandActive) { 
+            setIsStandActive(false); 
+            playAudioEffect('success');
+            if (!bodyMissions.water1cup) toggleBodyMission('water1cup'); 
+          }
+          return () => clearInterval(interval);
+        }, [isStandActive, standTimer]);
+
         const handleSquatClick = () => {
           const nextCount = squats + 1;
           setSquats(nextCount);
           playAudioEffect('squat', nextCount);
-          if (nextCount >= 10) {
+          if (nextCount >= 5) {
             toggleBodyMission('squats10');
           }
         };
@@ -652,7 +665,7 @@
                       ? 'bg-purple-950 border-purple-400 text-purple-200' 
                       : 'bg-slate-900 border-purple-500/70 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🦶 미션 1: 까치발 들기 10회</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🙋‍♂️ 미션 1: 만세 기지개 펴기</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('walk10s')} 
@@ -679,7 +692,7 @@
                       ? 'bg-cyan-950 border-cyan-400 text-cyan-200' 
                       : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🏋️ 미션 2: 스쿼트 하기 10회</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👁️ 미션 2: 눈 꼭 감았다 뜨기 3회</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('squats10')} 
@@ -706,7 +719,7 @@
                       ? 'bg-purple-950 border-purple-400 text-purple-200' 
                       : 'bg-slate-900 border-purple-500/70 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👟 미션 3: 양발 제기차기 10회</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">📏 미션 3: 앉아서 키 3cm 늘리기</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('balance10s')} 
@@ -733,7 +746,7 @@
                       ? 'bg-cyan-950 border-cyan-400 text-cyan-200' 
                       : 'bg-slate-900 border-cyan-500/70 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🧘 미션 4: 한 발로 서서 버티기 10초</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">🫶 미션 4: 옆친구에게 손하트 날리기</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('water1cup')} 
@@ -760,7 +773,7 @@
                       ? 'bg-purple-950 border-purple-400 text-purple-200' 
                       : 'bg-slate-900 border-purple-500/70 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)]'
                   }`}>
-                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👋 미션 5: 하이파이브 하기</h3>
+                    <h3 className="font-black text-xs sm:text-sm whitespace-nowrap tracking-tight">👏 미션 5: 박수 10번</h3>
                   </div>
                   <button 
                     onClick={() => toggleBodyMission('highfive')} 
@@ -779,7 +792,7 @@
         );
       }
 
-      // 3. Interactive 10-Question Quiz View (Retries on wrong answer, reveals explanation on correct answer)
+      // 3. Interactive 5-Question Quiz View (Retries on wrong answer, reveals explanation on correct answer)
       const questionsData = [
         {
           title: "[1단계: 초성 뇌 자극]",
@@ -795,33 +808,7 @@
           explanation: "초성 ㅂ(보) ㄱ(건) ㄱ(교) ㅇ(육)을 조합하면 학생들의 건강과 안전을 지키는 '보건교육'이 완성됩니다."
         },
         {
-          title: "[2단계: 고난도 뇌회전 연산]",
-          question: "다음 사칙연산의 진짜 정답은?",
-          banner: <div className="text-2xl sm:text-3xl font-black tracking-wider text-amber-300 bg-slate-900/90 py-3 px-2 rounded-2xl border border-amber-500/40 text-center whitespace-nowrap shadow-[0_0_20px_rgba(245,158,11,0.2)]">2 + 2 × 2 - 2 ÷ 2 = <span className="text-cyan-300 underline font-black">?</span></div>,
-          options: [
-            { text: "① 3", isCorrect: false },
-            { text: "② 5", isCorrect: true },
-            { text: "③ 0", isCorrect: false },
-            { text: "④ 2", isCorrect: false },
-          ],
-          answerText: "② 5",
-          explanation: "사칙연산 우선순위에 따라 곱하기·나누기를 먼저 계산합니다. 2 + (2×2) - (2÷2) = 2 + 4 - 1 = 5입니다."
-        },
-        {
-          title: "[3단계: 단어 분해·조합]",
-          question: "다음 자음·모음을 모두 조합해 만들 수 있는 미래 교육 핵심 키워드는?",
-          banner: <div className="text-xl sm:text-2xl font-black text-amber-300 bg-slate-900/90 py-3.5 px-3 rounded-2xl border border-amber-500/40 text-center tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.2)]">🧩 ㄷ, ㅣ, ㅈ, ㅌ, ㅓ, ㄹ, ㅅ</div>,
-          options: [
-            { text: "① 미래역량강화", isCorrect: false },
-            { text: "② 지능정보기술", isCorrect: false },
-            { text: "③ 디지털 리터러시", isCorrect: true },
-            { text: "④ 스마트학습도구", isCorrect: false },
-          ],
-          answerText: "③ 디지털 리터러시",
-          explanation: "제시된 자음과 모음(ㄷ,ㅣ,ㅈ,ㅌ,ㅓ,ㄹ,ㅅ)을 조합하면 미래 교육 필수 키워드인 '디지털 리터러시'가 됩니다."
-        },
-        {
-          title: "[4단계: 시각 인지 스트룹 훈련]",
+          title: "[2단계: 시각 인지 스트룹 훈련]",
           question: "글자의 잉크 색깔과 의미가 똑같이 일치하는 하나는?",
           options: [
             { text: "① 파랑", isCorrect: false, colorClass: "text-red-500" },
@@ -833,20 +820,7 @@
           explanation: "글자 '초록'은 실제로 🟢 초록색 잉크로 칠해져 있어 단어 의미와 글자 잉크 색상이 정확히 일치합니다."
         },
         {
-          title: "[5단계: 교사 공감 넌센스]",
-          question: "학교에서 선생님의 목소리가 가장 커지는 순간은 언제일까요?",
-          banner: <div className="text-xl sm:text-2xl font-black text-amber-300 bg-slate-900/90 py-3.5 px-3 rounded-2xl border border-amber-500/40 text-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">🗣️ 🏫 🚪 📢 ❓</div>,
-          options: [
-            { text: "① 교장선생님 훈화 말씀 중", isCorrect: false },
-            { text: "② \"뒤에 문 닫고 들어오세요~!\"", isCorrect: true },
-            { text: "③ 퇴근 시간 1분 전", isCorrect: false },
-            { text: "④ 급식 메뉴 확인할 때", isCorrect: false },
-          ],
-          answerText: "② \"뒤에 문 닫고 들어오세요~!\"",
-          explanation: "쉬는 시간의 북적임과 복도 소음을 한 방에 정리하고 수업에 몰입시키는 전국 선생님들의 공통 1등 샤우팅! 🗣️🚪✨"
-        },
-        {
-          title: "[6단계: 넌센스 뇌 자극]",
+          title: "[3단계: 넌센스 뇌 자극]",
           question: "세상에서 가장 지루한 중학교는?",
           banner: <div className="text-3xl font-black text-amber-300 bg-slate-900/90 py-3 rounded-2xl border border-amber-500/40 flex justify-center items-center gap-3"><span>💻</span><span>⏳</span><span>❓</span></div>,
           options: [
@@ -859,31 +833,7 @@
           explanation: "인터넷 화면이 지루하게 대기 중일 때 뜨는 '로딩 중(Loading...)'을 언어 유희로 표현한 넌센스 퀴즈입니다."
         },
         {
-          title: "[7단계: 건강 O/X 알쏭달쏭]",
-          question: "수박을 먹다가 실수로 삼킨 수박 씨는 맹장(충수)에 들어가 맹장염을 일으킨다?",
-          banner: <div className="text-3xl font-black text-cyan-300 bg-slate-900/90 py-3 rounded-2xl border border-cyan-500/40 flex justify-center gap-6"><span>🍉</span><span>🌱</span><span>❓</span></div>,
-          options: [
-            { text: "⭕ (맞다)", isCorrect: false },
-            { text: "❌ (아니다)", isCorrect: true },
-          ],
-          answerText: "❌ (아니다)",
-          explanation: "수박 씨는 소화관을 따라 자연스럽게 배출되며 맹장(충수)에 들어가 맹장염을 일으키지 않는 잘못된 상식입니다."
-        },
-        {
-          title: "[8단계: 숫자 규칙 추론]",
-          question: "1 - 2 - 4 - 7 - ? 에서 ?에 올 숫자는?",
-          banner: <div className="flex items-center justify-center bg-slate-900/90 py-4 px-3 rounded-2xl border border-yellow-500/40 shadow-[0_0_20px_rgba(234,179,8,0.2)]"><span className="text-3xl sm:text-4xl font-black text-yellow-300 drop-shadow-[0_0_10px_rgba(253,224,71,0.8)]">1</span><span className="text-xs sm:text-sm text-slate-400 font-normal px-1.5 opacity-70">➔</span><span className="text-3xl sm:text-4xl font-black text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]">2</span><span className="text-xs sm:text-sm text-slate-400 font-normal px-1.5 opacity-70">➔</span><span className="text-3xl sm:text-4xl font-black text-emerald-300 drop-shadow-[0_0_10px_rgba(110,231,183,0.8)]">4</span><span className="text-xs sm:text-sm text-slate-400 font-normal px-1.5 opacity-70">➔</span><span className="text-3xl sm:text-4xl font-black text-cyan-300 drop-shadow-[0_0_10px_rgba(103,232,249,0.8)]">7</span><span className="text-xs sm:text-sm text-slate-400 font-normal px-1.5 opacity-70">➔</span><span className="text-3xl sm:text-4xl font-black text-rose-400 underline animate-bounce drop-shadow-[0_0_12px_rgba(251,113,133,0.9)]">?</span></div>,
-          options: [
-            { text: "① 10", isCorrect: false },
-            { text: "② 12", isCorrect: false },
-            { text: "③ 9", isCorrect: false },
-            { text: "④ 11", isCorrect: true },
-          ],
-          answerText: "④ 11",
-          explanation: "숫자가 차례대로 +1, +2, +3, +4씩 늘어나는 계수수열 규칙입니다. (7 + 4 = 11)"
-        },
-        {
-          title: "[9단계: 미래 수업 비전]",
+          title: "[4단계: 미래 수업 비전]",
           question: "'선생님의 열정' + '학생의 참여'가 만났을 때 일어나는 궁극적인 변화는?",
           banner: <div className="text-lg sm:text-xl font-black text-amber-300 bg-slate-900/90 py-3.5 px-3 rounded-2xl border border-amber-500/40 text-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">🔥 선생님의 열정 ➕ 🙋‍♀️ 학생의 참여 = ❓</div>,
           options: [
@@ -896,7 +846,7 @@
           explanation: "교사의 열정과 학생의 적극적인 참여가 만났을 때 배움이 즐거운 성장 중심의 미래 수업이 펼쳐집니다."
         },
         {
-          title: "[10단계: 뇌 청춘 최종선언]",
+          title: "[5단계: 뇌 청춘 최종선언]",
           question: "보건교육과 코딩의 시너지는?",
           options: [
             { text: "① 어려운 코딩 포기하기", isCorrect: false },
@@ -922,7 +872,7 @@
           if (isCorrect) {
             playAudioEffect('success');
             setIsCorrectSolved(true);
-            setScore(s => s + 10);
+            setScore(s => s + 20);
           } else {
             playAudioEffect('wrong');
             if (!wrongIndices.includes(idx)) {
@@ -937,12 +887,12 @@
           setIsCorrectSolved(false);
           setWrongIndices([]);
 
-          if (step < 9) {
+          if (step < 4) {
             setStep(s => s + 1);
           } else {
             let levelGrade = '👑 뇌 청춘 S급 (뇌 연령 10대 슈퍼 브레인!)';
-            if (score < 70) levelGrade = '🧠 뇌 활력 A급 (뇌 연령 20대!)';
-            if (score < 50) levelGrade = '👍 뇌 건강 B급 (뇌 활성 진행 중!)';
+            if (score < 80) levelGrade = '🧠 뇌 활력 A급 (뇌 연령 20대!)';
+            if (score < 60) levelGrade = '👍 뇌 건강 B급 (뇌 활성 진행 중!)';
             completeBrainQuiz(score, levelGrade);
           }
         };
@@ -961,7 +911,7 @@
             <div className="glass-card rounded-3xl p-4 sm:p-5 border border-purple-500/40 text-center space-y-2 shadow-2xl">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] sm:text-xs font-extrabold text-cyan-400 tracking-tight flex items-center gap-1">
-                  <span>⚡</span> 뇌 자극 10단계 챌린지
+                  <span>⚡</span> 뇌 자극 5단계 챌린지 (문항당 20점)
                 </span>
                 <span className="text-sm font-black text-amber-300 bg-slate-900 px-3 py-1 rounded-full border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.4)] flex items-center gap-1 animate-bounce">
                   <span>✨</span>
@@ -978,7 +928,7 @@
               <div className="glass-card rounded-3xl p-6 border border-purple-500/20 text-center space-y-5">
                 <div className="flex justify-between items-center text-xs font-bold text-purple-300 border-b border-purple-500/20 pb-2">
                   <span>❓ 뇌 활성화 트레이닝</span>
-                  <span>문제 {step + 1} / 10</span>
+                  <span>문제 {step + 1} / 5</span>
                 </div>
 
                 <div className="space-y-4 text-left">
@@ -1028,9 +978,9 @@
                   {/* Revealed Answer & Explanation Box */}
                   {isCorrectSolved && (
                     <div className="space-y-2.5 pt-2">
-                      {step !== 9 && (
+                      {step !== 4 && (
                         <div className="p-2.5 rounded-xl border border-emerald-500/60 bg-emerald-950/90 text-emerald-300 text-center font-black text-xs flex items-center justify-center gap-2 shadow-lg">
-                          <span>🎉 정답입니다!</span>
+                          <span>🎉 정답입니다! (+20점)</span>
                         </div>
                       )}
 
@@ -1069,7 +1019,7 @@
                   </button>
 
                   <span className="text-[11px] font-black text-purple-300 bg-slate-900 px-2.5 py-0.5 rounded-full border border-purple-500/30">
-                    {step + 1} / 10
+                    {step + 1} / 5
                   </span>
 
                   <button
@@ -1077,7 +1027,7 @@
                     onClick={handleNextStep}
                     className="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-xs font-black rounded-xl border border-cyan-400/40 shadow-md hover:scale-105 active:scale-95 transition-all flex items-center gap-1"
                   >
-                    <span>{step === 9 ? '완료' : '다음'}</span>
+                    <span>{step === 4 ? '완료' : '다음'}</span>
                     <span>➡️</span>
                   </button>
                 </div>
@@ -1109,15 +1059,14 @@
       function ReviewTab() {
         const { review, submitReviewData, resetReview, reviewScore, setActiveTab } = useUser();
         const [toolIdea, setToolIdea] = useState(review.toolIdea || review.idea || '');
-        const [classroomPain, setClassroomPain] = useState(review.classroomPain || '');
         const [pledgeKeyword, setPledgeKeyword] = useState(review.pledgeKeyword || review.boothReview || '');
 
         const handleSubmit = (e) => {
           e.preventDefault();
-          if (!toolIdea.trim() || !classroomPain.trim() || !pledgeKeyword.trim()) {
-            return alert('3가지 항목을 모두 적어주세요!');
+          if (!toolIdea.trim() || !pledgeKeyword.trim()) {
+            return alert('2가지 항목을 모두 적어주세요!');
           }
-          submitReviewData(toolIdea.trim(), classroomPain.trim(), pledgeKeyword.trim());
+          submitReviewData(toolIdea.trim(), '', pledgeKeyword.trim());
         };
 
         return (
@@ -1125,7 +1074,7 @@
             <div className="glass-card rounded-3xl p-5 border border-purple-500/30 flex justify-between items-center">
               <div>
                 <span className="text-[10px] font-bold text-pink-400">💡 아이디어 존</span>
-                <h2 className="text-xl font-black text-white">아이디어 존 3가지</h2>
+                <h2 className="text-xl font-black text-white">아이디어 존 2가지</h2>
               </div>
               <div className="text-2xl font-black text-cyan-400">{reviewScore} <span className="text-xs text-slate-400">/ 100p</span></div>
             </div>
@@ -1142,16 +1091,7 @@
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="block text-sm sm:text-base font-extrabold text-white">😫 2. 교실 속 불편함 털어놓기 (AI가 대신 해결해 줬으면 하는 일) *</label>
-                  <textarea
-                    required rows={2} placeholder="예: 차시별 퀴즈 만들기, 행정 서식 자동화, 개별 평가문 작성"
-                    value={classroomPain} onChange={e => setClassroomPain(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-sm sm:text-base text-white placeholder-slate-500 outline-none font-medium"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-sm sm:text-base font-extrabold text-white">✨ 3. 오늘 나의 다짐 & 키워드 *</label>
+                  <label className="block text-sm sm:text-base font-extrabold text-white">✨ 2. 오늘 나의 다짐 & 키워드 *</label>
                   <input
                     type="text" required placeholder="예: 매일 10분 바이브 코딩으로 수업 혁신하기! #바이브코딩"
                     value={pledgeKeyword} onChange={e => setPledgeKeyword(e.target.value)}
